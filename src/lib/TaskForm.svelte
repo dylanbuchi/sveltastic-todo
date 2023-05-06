@@ -1,10 +1,9 @@
-<!-- TaskForm.svelte -->
 <script lang="ts">
   import { nanoid } from "nanoid";
   import { createEventDispatcher, onMount } from "svelte";
 
   let taskTitle = "";
-  let inputField: HTMLInputElement = undefined;
+  let taskTitleInputElement: HTMLInputElement = undefined;
 
   const dispatch = createEventDispatcher();
 
@@ -19,13 +18,14 @@
 
     dispatch("addTask", { task: newTask });
     taskTitle = "";
-    focus();
-  }
-  function focus() {
-    inputField.focus();
+    focusInput();
   }
 
-  onMount(focus);
+  function focusInput() {
+    taskTitleInputElement.focus();
+  }
+
+  onMount(focusInput);
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
@@ -35,7 +35,7 @@
         class="input"
         type="text"
         placeholder="Enter task"
-        bind:this={inputField}
+        bind:this={taskTitleInputElement}
         bind:value={taskTitle}
       />
     </div>
