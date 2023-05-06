@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import type { Task } from "../models/task.model";
+  import type { Task } from "../../models/task.model";
   import { Trash2 } from "lucide-svelte";
 
   const dispatch = createEventDispatcher();

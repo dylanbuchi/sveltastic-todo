@@ -1,6 +1,6 @@
 <script lang="ts">
-  import TaskForm from "./lib/TaskForm.svelte";
-  import TaskList from "./lib/TaskList.svelte";
+  import TaskForm from "./lib/tasks/TaskForm.svelte";
+  import TaskList from "./lib/tasks/TaskList.svelte";
   import type { Task } from "./models/task.model";
   import { APP_NAME } from "./utils/constants/app.constants";
 
