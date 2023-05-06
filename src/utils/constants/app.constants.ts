@@ -1,1 +1,1 @@
-export const APP_NAME = "Sveltastic Todo list";
+export const APP_NAME = "Sveltastic Todo List";
