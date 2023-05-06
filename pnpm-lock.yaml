@@ -4,6 +4,9 @@ dependencies:
   bulma:
     specifier: ^0.9.4
     version: 0.9.4
+  lucide-svelte:
+    specifier: ^0.214.0
+    version: 0.214.0(svelte@3.57.0)
   nanoid:
     specifier: ^4.0.2
     version: 4.0.2
@@ -535,6 +538,14 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /lucide-svelte@0.214.0(svelte@3.57.0):
+    resolution: {integrity: sha512-Zho0Smm/rqx788JPnEV9SUxW2NkT5tmfOwaXTuCtYUHTJAUdirNIABoNJp1WH4u1DZODV/A9rHncgKPojF8Wyg==}
+    peerDependencies:
+      svelte: ^3.49.0
+    dependencies:
+      svelte: 3.57.0
+    dev: false
+
   /magic-string@0.25.9:
     resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
     dependencies:
@@ -831,7 +842,6 @@ packages:
   /svelte@3.57.0:
     resolution: {integrity: sha512-WMXEvF+RtAaclw0t3bPDTUe19pplMlfyKDsixbHQYgCWi9+O9VN0kXU1OppzrB9gPAvz4NALuoca2LfW2bOjTQ==}
     engines: {node: '>= 8'}
-    dev: true
 
   /to-regex-range@5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
