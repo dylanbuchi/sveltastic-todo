@@ -24,12 +24,14 @@
   }
 </script>
 
-<main class="card-content">
-  <h1 class="title">{APP_NAME}</h1>
-  <TaskForm on:addTask={handleAddTask} />
-  <TaskList
-    onRemoveTask={handleRemoveTask}
-    onToggleComplete={handleToggleComplete}
-    {tasks}
-  />
+<main class="container is-centered">
+  <div class="card-content">
+    <h1 class="title has-text-centered">{APP_NAME}</h1>
+    <TaskForm on:addTask={handleAddTask} />
+    <TaskList
+      onRemoveTask={handleRemoveTask}
+      onToggleComplete={handleToggleComplete}
+      {tasks}
+    />
+  </div>
 </main>
