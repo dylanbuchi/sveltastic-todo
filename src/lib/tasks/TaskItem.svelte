@@ -8,7 +8,6 @@
   const dispatch = createEventDispatcher();
 
   export let task: Task;
-
   let isEditingTask = false;
   let editedTitle = task.title;
   let editedDueDate = task?.dueDate.toISOString().slice(0, 10);
@@ -59,20 +58,19 @@
 </script>
 
 <div class="columns is-mobile is-flex is-align-items-center">
-  <div class="column is-narrow is-flex is-align-items-center">
-    <input
-      id={task.id}
-      class="css-checkbox"
-      name="title"
-      type="checkbox"
-      on:change={handleCheckboxClick}
-      bind:checked={task.completed}
-    />
-    <label class="checkbox" for={task.id} />
-  </div>
-
   {#if !isEditingTask}
     <div class="column is-flex is-align-items-center">
+      <div class="column is-narrow is-flex is-align-items-center">
+        <input
+          id={task.id}
+          class="css-checkbox"
+          name="title"
+          type="checkbox"
+          on:change={handleCheckboxClick}
+          bind:checked={task.completed}
+        />
+        <label class="checkbox" for={task.id} />
+      </div>
       <div class="content title is-5" class:checked={task.completed}>
         <span class:crossed={task.completed}>{task.title}</span>
       </div>
@@ -115,7 +113,9 @@
       />
     </div>
   {:else}
-    <span class="has-text-grey">Due: {formatDate(task?.dueDate)}</span>
+    <span class="has-text-grey" class:crossed={task.completed}
+      >Due: {formatDate(task?.dueDate)}</span
+    >
   {/if}
 </div>
 
