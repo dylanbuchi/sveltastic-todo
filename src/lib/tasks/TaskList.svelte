@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Task } from "../../models/task.model";
   import TaskItem from "./TaskItem.svelte";
+  import autoAnimate from "@formkit/auto-animate";
 
   export let tasks: Task[];
 
@@ -9,7 +10,7 @@
   export let onEditTask: (event: CustomEvent) => void;
 </script>
 
-<ul>
+<ul use:autoAnimate>
   {#each tasks as task (task.id)}
     <li class="mt-5 box {task.completed ? 'has-background-grey-lighter' : ''}">
       <TaskItem
