@@ -24,12 +24,18 @@
   }
 
   function handleEditTask(event: CustomEvent) {
-    const { taskId, title } = event.detail;
-    tasks = tasks.map((item) =>
-      item.id === taskId
-        ? { ...item, title: title.length ? title : item.title }
-        : item
-    );
+    const data = event.detail;
+
+    tasks = tasks.map((item) => {
+      if (item.id === data.id) {
+        const updatedTask: Partial<Task> = {
+          title: data.title ? data.title : item.title,
+          dueDate: data.dueDate ? data.dueDate : item.dueDate,
+        };
+        return { ...item, ...updatedTask };
+      }
+      return item;
+    });
   }
 </script>
 

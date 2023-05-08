@@ -1,24 +1,33 @@
 <script lang="ts">
   import { nanoid } from "nanoid";
   import { createEventDispatcher, onMount } from "svelte";
+  import { formatDateISO } from "../../utils/helpers/date.helper";
 
   let taskTitle = "";
+
+  let dueDate = new Date();
+
+  let formattedDate = formatDateISO(dueDate);
+
   let taskTitleInputElement: HTMLInputElement = undefined;
 
   const dispatch = createEventDispatcher();
 
   function handleSubmit() {
-    if (!taskTitle) return;
-
-    const newTask = {
-      id: nanoid(),
-      title: taskTitle,
-      completed: false,
-    };
-
-    dispatch("addTask", { task: newTask });
-    taskTitle = "";
     focusInput();
+
+    if (taskTitle.trim().length > 0) {
+      const newTask = {
+        id: nanoid(),
+        title: taskTitle,
+        completed: false,
+        dueDate: new Date(formattedDate),
+      };
+
+      dispatch("addTask", { task: newTask });
+      taskTitle = "";
+      dueDate = new Date();
+    }
   }
 
   function focusInput() {
@@ -29,18 +38,24 @@
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
-  <div class="field">
-    <div class="control">
+  <div class="field has-addons">
+    <div class="control is-expanded">
       <input
         class="input"
         type="text"
         placeholder="Enter task"
-        bind:this={taskTitleInputElement}
         bind:value={taskTitle}
+        bind:this={taskTitleInputElement}
       />
     </div>
-  </div>
-  <div class="field">
+    <div class="control">
+      <input
+        class="input session-date"
+        min={formatDateISO(new Date())}
+        type="date"
+        bind:value={formattedDate}
+      />
+    </div>
     <div class="control">
       <button class="button is-link" type="submit">Add Task</button>
     </div>

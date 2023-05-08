@@ -3,6 +3,7 @@
   import type { Task } from "../../models/task.model";
   import { Edit2Icon, SaveIcon, Trash2, XIcon } from "lucide-svelte";
   import TaskButtons from "./TaskButtons.svelte";
+  import { formatDate } from "../../utils/helpers/date.helper";
 
   const dispatch = createEventDispatcher();
 
@@ -10,6 +11,7 @@
 
   let isEditingTask = false;
   let editedTitle = task.title;
+  let editedDueDate = task?.dueDate.toISOString().slice(0, 10);
 
   let editInput: HTMLInputElement;
 
@@ -30,11 +32,13 @@
   }
 
   function handleSaveTask() {
-    isEditingTask = false;
-    dispatch("editTask", {
-      taskId: task.id,
+    const data: Partial<Task> = {
+      id: task.id,
       title: editedTitle,
-    });
+      dueDate: new Date(editedDueDate),
+    };
+    dispatch("editTask", data);
+    isEditingTask = false;
   }
 
   function handleCancelClick() {
@@ -99,6 +103,19 @@
       icon={SaveIcon}
       secondaryIcon={XIcon}
     />
+  {/if}
+</div>
+<div>
+  {#if isEditingTask && task.dueDate}
+    <div class="control">
+      <input
+        class="input session-date"
+        type="date"
+        bind:value={editedDueDate}
+      />
+    </div>
+  {:else}
+    <span class="has-text-grey">Due: {formatDate(task?.dueDate)}</span>
   {/if}
 </div>
 
