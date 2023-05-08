@@ -22,6 +22,15 @@
       item.id === taskId ? { ...item, completed: !item.completed } : item
     );
   }
+
+  function handleEditTask(event: CustomEvent) {
+    const { taskId, title } = event.detail;
+    tasks = tasks.map((item) =>
+      item.id === taskId
+        ? { ...item, title: title.length ? title : item.title }
+        : item
+    );
+  }
 </script>
 
 <main class="container is-centered">
@@ -29,6 +38,7 @@
     <h1 class="title has-text-centered">{APP_NAME}</h1>
     <TaskForm on:addTask={handleAddTask} />
     <TaskList
+      onEditTask={handleEditTask}
       onRemoveTask={handleRemoveTask}
       onToggleComplete={handleToggleComplete}
       {tasks}

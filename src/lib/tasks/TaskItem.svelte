@@ -1,18 +1,42 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import type { Task } from "../../models/task.model";
-  import { Trash2 } from "lucide-svelte";
+  import { Edit2Icon, SaveIcon, Trash2, XIcon } from "lucide-svelte";
+  import TaskButtons from "./TaskButtons.svelte";
 
   const dispatch = createEventDispatcher();
 
   export let task: Task;
 
+  let isEditingTask = false;
+  let editedTitle = task.title;
+
+  function dispatchHelper(name: string, id: string) {
+    dispatch(name, { taskId: id });
+  }
+
   function handleCheckboxClick() {
-    dispatch("toggleComplete", { taskId: task.id });
+    dispatchHelper("toggleComplete", task.id);
   }
 
   function handleDeleteClick() {
-    dispatch("removeTask", { taskId: task.id });
+    dispatchHelper("removeTask", task.id);
+  }
+
+  function handleEditClick() {
+    isEditingTask = true;
+  }
+
+  function handleSaveTask() {
+    isEditingTask = false;
+    dispatch("editTask", {
+      taskId: task.id,
+      title: editedTitle,
+    });
+  }
+
+  function handleCancelClick() {
+    isEditingTask = false;
   }
 </script>
 
@@ -28,18 +52,34 @@
     />
     <label class="checkbox" for={task.id} />
   </div>
-  <div class="column is-flex is-align-items-center">
-    <div class="content title is-5" class:checked={task.completed}>
-      <span class:crossed={task.completed}>{task.title}</span>
+
+  {#if !isEditingTask}
+    <div class="column is-flex is-align-items-center">
+      <div class="content title is-5" class:checked={task.completed}>
+        <span class:crossed={task.completed}>{task.title}</span>
+      </div>
     </div>
-  </div>
-  <div class="column is-narrow is-flex is-align-items-center">
-    <button class="button is-danger is-small" on:click={handleDeleteClick}>
-      <span class="icon is-small">
-        <Trash2 />
-      </span>
-    </button>
-  </div>
+    <TaskButtons
+      action={handleEditClick}
+      secondaryAction={handleDeleteClick}
+      icon={Edit2Icon}
+      secondaryIcon={Trash2}
+    />
+  {:else}
+    <div class="column is-flex is-align-items-center">
+      <div class="field">
+        <div class="control">
+          <input class="input" type="text" bind:value={editedTitle} />
+        </div>
+      </div>
+    </div>
+    <TaskButtons
+      action={handleSaveTask}
+      secondaryAction={handleCancelClick}
+      icon={SaveIcon}
+      secondaryIcon={XIcon}
+    />
+  {/if}
 </div>
 
 <style>

@@ -6,12 +6,14 @@
 
   export let onRemoveTask: (event: CustomEvent) => void;
   export let onToggleComplete: (event: CustomEvent) => void;
+  export let onEditTask: (event: CustomEvent) => void;
 </script>
 
 <ul>
   {#each tasks as task (task.id)}
     <li class="mt-5 box {task.completed ? 'has-background-grey-lighter' : ''}">
       <TaskItem
+        on:editTask={onEditTask}
         on:toggleComplete={onToggleComplete}
         on:removeTask={onRemoveTask}
         {task}
