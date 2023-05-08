@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { afterUpdate, createEventDispatcher } from "svelte";
   import type { Task } from "../../models/task.model";
   import { Edit2Icon, SaveIcon, Trash2, XIcon } from "lucide-svelte";
   import TaskButtons from "./TaskButtons.svelte";
@@ -10,6 +10,8 @@
 
   let isEditingTask = false;
   let editedTitle = task.title;
+
+  let editInput: HTMLInputElement;
 
   function dispatchHelper(name: string, id: string) {
     dispatch(name, { taskId: id });
@@ -38,6 +40,18 @@
   function handleCancelClick() {
     isEditingTask = false;
   }
+
+  function handleKeyDown(event: KeyboardEvent) {
+    if (event.key === "Enter") {
+      handleSaveTask();
+    } else if (event.key === "Escape") {
+      handleCancelClick();
+    }
+  }
+
+  afterUpdate(() => {
+    if (isEditingTask && editInput) editInput.focus();
+  });
 </script>
 
 <div class="columns is-mobile is-flex is-align-items-center">
@@ -69,7 +83,13 @@
     <div class="column is-flex is-align-items-center">
       <div class="field">
         <div class="control">
-          <input class="input" type="text" bind:value={editedTitle} />
+          <input
+            class="input"
+            type="text"
+            bind:this={editInput}
+            bind:value={editedTitle}
+            on:keydown={handleKeyDown}
+          />
         </div>
       </div>
     </div>
