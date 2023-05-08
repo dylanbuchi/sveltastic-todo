@@ -12,7 +12,7 @@
 
 <ul use:autoAnimate>
   {#each tasks as task (task.id)}
-    <li class="mt-5 box {task.completed ? 'has-background-grey-lighter' : ''}">
+    <li>
       <TaskItem
         on:editTask={onEditTask}
         on:toggleComplete={onToggleComplete}

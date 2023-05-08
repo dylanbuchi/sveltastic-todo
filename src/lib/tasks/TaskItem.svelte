@@ -57,66 +57,72 @@
   });
 </script>
 
-<div class="columns is-mobile is-flex is-align-items-center">
-  {#if !isEditingTask}
-    <div class="column is-flex is-align-items-center">
-      <div class="column is-narrow is-flex is-align-items-center">
-        <input
-          id={task.id}
-          class="css-checkbox"
-          name="title"
-          type="checkbox"
-          on:change={handleCheckboxClick}
-          bind:checked={task.completed}
-        />
-        <label class="checkbox" for={task.id} />
-      </div>
-      <div class="content title is-5" class:checked={task.completed}>
-        <span class:crossed={task.completed}>{task.title}</span>
-      </div>
-    </div>
-    <TaskButtons
-      action={handleEditClick}
-      secondaryAction={handleDeleteClick}
-      icon={Edit2Icon}
-      secondaryIcon={Trash2}
-    />
-  {:else}
-    <div class="column is-flex is-align-items-center">
-      <div class="field">
-        <div class="control">
+<div
+  class="mt-5 box {task.completed && !isEditingTask
+    ? 'has-background-grey-lighter'
+    : ''}"
+>
+  <div class="columns is-mobile is-flex is-align-items-center">
+    {#if !isEditingTask}
+      <div class="column is-flex is-align-items-center">
+        <div class="column is-narrow is-flex is-align-items-center">
           <input
-            class="input"
-            type="text"
-            bind:this={editInput}
-            bind:value={editedTitle}
-            on:keydown={handleKeyDown}
+            id={task.id}
+            class="css-checkbox"
+            name="title"
+            type="checkbox"
+            on:change={handleCheckboxClick}
+            bind:checked={task.completed}
           />
+          <label class="checkbox" for={task.id} />
+        </div>
+        <div class="content title is-5" class:checked={task.completed}>
+          <span class:crossed={task.completed}>{task.title}</span>
         </div>
       </div>
-    </div>
-    <TaskButtons
-      action={handleSaveTask}
-      secondaryAction={handleCancelClick}
-      icon={SaveIcon}
-      secondaryIcon={XIcon}
-    />
-  {/if}
-</div>
-<div>
-  {#if isEditingTask && task.dueDate}
-    <div class="control">
-      <input
-        class="input session-date"
-        type="date"
-        bind:value={editedDueDate}
+      <TaskButtons
+        action={handleEditClick}
+        secondaryAction={handleDeleteClick}
+        icon={Edit2Icon}
+        secondaryIcon={Trash2}
       />
-    </div>
-  {:else}
-    <span class="has-text-grey" class:crossed={task.completed}
-      >Due: {formatDate(task?.dueDate)}</span
-    >
-  {/if}
+    {:else}
+      <div class="column is-flex is-align-items-center">
+        <div class="field">
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              bind:this={editInput}
+              bind:value={editedTitle}
+              on:keydown={handleKeyDown}
+            />
+          </div>
+        </div>
+      </div>
+      <TaskButtons
+        action={handleSaveTask}
+        secondaryAction={handleCancelClick}
+        icon={SaveIcon}
+        secondaryIcon={XIcon}
+      />
+    {/if}
+  </div>
+  <div>
+    {#if isEditingTask && task.dueDate}
+      <div class="control">
+        <input
+          class="input session-date"
+          type="date"
+          bind:value={editedDueDate}
+        />
+      </div>
+    {:else}
+      <span class="has-text-grey" class:crossed={task.completed}
+        >Due: {formatDate(task?.dueDate)}</span
+      >
+    {/if}
+  </div>
 </div>
 
 <style>
