@@ -1,7 +1,9 @@
 <script lang="ts">
   import { nanoid } from "nanoid";
   import { createEventDispatcher, onMount } from "svelte";
-  import { formatDateISO } from "../../utils/helpers/date.helper";
+  import { formatDateISO } from "../../utils/helpers/date.helpers";
+  import type { TaskEvent } from "../../utils/events/tasks.events";
+  import { createTaskEventHandlers } from "../../utils/events/tasks.events";
 
   let taskTitle = "";
 
@@ -11,7 +13,9 @@
 
   let taskTitleInputElement: HTMLInputElement = undefined;
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<TaskEvent>();
+
+  const { handleAddTask } = createTaskEventHandlers(dispatch);
 
   function handleSubmit() {
     focusInput();
@@ -24,7 +28,8 @@
         dueDate: new Date(formattedDate),
       };
 
-      dispatch("addTask", { task: newTask });
+      handleAddTask(newTask);
+
       taskTitle = "";
       dueDate = new Date();
     }

@@ -3,50 +3,41 @@
   import type { Task } from "../../models/task.model";
   import { Edit2Icon, SaveIcon, Trash2, XIcon } from "lucide-svelte";
   import TaskButtons from "./TaskButtons.svelte";
-  import { formatDate } from "../../utils/helpers/date.helper";
-
-  const dispatch = createEventDispatcher();
+  import { formatDate, formatDateISO } from "../../utils/helpers/date.helpers";
+  import {
+    type TaskEvent,
+    createTaskEventHandlers,
+  } from "../../utils/events/tasks.events";
 
   export let task: Task;
+
+  const dispatch = createEventDispatcher<TaskEvent>();
+
+  const { handleEditTask, handleRemoveTask, handleToggleCompleteTask } =
+    createTaskEventHandlers(dispatch);
+
   let isEditingTask = false;
   let editedTitle = task.title;
   let editedDueDate = task?.dueDate.toISOString().slice(0, 10);
 
   let editInput: HTMLInputElement;
 
-  function dispatchHelper(name: string, id: string) {
-    dispatch(name, { taskId: id });
-  }
-
-  function handleCheckboxClick() {
-    dispatchHelper("toggleComplete", task.id);
-  }
-
-  function handleDeleteClick() {
-    dispatchHelper("removeTask", task.id);
-  }
-
   function handleEditClick() {
     isEditingTask = true;
-  }
-
-  function handleSaveTask() {
-    const data: Partial<Task> = {
-      id: task.id,
-      title: editedTitle,
-      dueDate: new Date(editedDueDate),
-    };
-    dispatch("editTask", data);
-    isEditingTask = false;
   }
 
   function handleCancelClick() {
     isEditingTask = false;
   }
 
+  function handleSaveTaskWrapper() {
+    handleEditTask(task, editedTitle, editedDueDate);
+    isEditingTask = false;
+  }
+
   function handleKeyDown(event: KeyboardEvent) {
     if (event.key === "Enter") {
-      handleSaveTask();
+      handleSaveTaskWrapper();
     } else if (event.key === "Escape") {
       handleCancelClick();
     }
@@ -71,7 +62,7 @@
             class="css-checkbox"
             name="title"
             type="checkbox"
-            on:change={handleCheckboxClick}
+            on:change={() => handleToggleCompleteTask(task)}
             bind:checked={task.completed}
           />
           <label class="checkbox" for={task.id} />
@@ -82,8 +73,8 @@
       </div>
       <TaskButtons
         action={handleEditClick}
-        secondaryAction={handleDeleteClick}
         icon={Edit2Icon}
+        secondaryAction={() => handleRemoveTask(task)}
         secondaryIcon={Trash2}
       />
     {:else}
@@ -101,9 +92,9 @@
         </div>
       </div>
       <TaskButtons
-        action={handleSaveTask}
-        secondaryAction={handleCancelClick}
+        action={handleSaveTaskWrapper}
         icon={SaveIcon}
+        secondaryAction={handleCancelClick}
         secondaryIcon={XIcon}
       />
     {/if}
@@ -114,7 +105,9 @@
         <input
           class="input session-date"
           type="date"
+          min={formatDateISO(new Date())}
           bind:value={editedDueDate}
+          on:keydown={handleKeyDown}
         />
       </div>
     {:else}
