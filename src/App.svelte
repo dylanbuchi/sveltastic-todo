@@ -18,10 +18,10 @@
     <h1 class="title has-text-centered">{APP_NAME}</h1>
     <TaskForm on:addTask={(event) => (tasks = handleAddTask(tasks, event))} />
     <TaskList
-      onEditTask={(event) => (tasks = handleEditTask(tasks, event))}
-      onRemoveTask={(event) => (tasks = handleRemoveTask(tasks, event))}
-      onToggleComplete={(event) =>
+      on:editTask={(event) => (tasks = handleEditTask(tasks, event))}
+      on:toggleComplete={(event) =>
         (tasks = handleToggleCompleteTask(tasks, event))}
+      on:removeTask={(event) => (tasks = handleRemoveTask(tasks, event))}
       {tasks}
     />
   </div>
