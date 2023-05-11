@@ -1,12 +1,16 @@
 import type { Task } from "../../models/task.model";
 import type { TaskEvent } from "../events/tasks.events";
+import { saveTasksToLocalStorage } from "../helpers/local-storage.helpers";
 
 export function handleAddTask(
   tasks: Task[],
   event: CustomEvent<TaskEvent["addTask"]>
 ) {
   const task = event.detail;
-  return [task, ...tasks];
+
+  const updatedTasks = [task, ...tasks];
+  saveTasksToLocalStorage(updatedTasks);
+  return updatedTasks;
 }
 
 export function handleRemoveTask(
@@ -14,7 +18,10 @@ export function handleRemoveTask(
   event: CustomEvent<TaskEvent["removeTask"]>
 ) {
   const { id } = event.detail;
-  return tasks.filter((item) => item.id !== id);
+
+  const filteredTasks = tasks.filter((item) => item.id !== id);
+  saveTasksToLocalStorage(filteredTasks);
+  return filteredTasks;
 }
 
 export function handleToggleCompleteTask(
@@ -22,9 +29,12 @@ export function handleToggleCompleteTask(
   event: CustomEvent<TaskEvent["toggleComplete"]>
 ) {
   const { id } = event.detail;
-  return tasks.map((item) =>
+
+  const updatedTasks = tasks.map((item) =>
     item.id === id ? { ...item, completed: !item.completed } : item
   );
+  saveTasksToLocalStorage(updatedTasks);
+  return updatedTasks;
 }
 
 export function handleEditTask(
@@ -33,7 +43,7 @@ export function handleEditTask(
 ) {
   const data = event.detail;
 
-  return tasks.map((item) => {
+  const updatedTasks = tasks.map((item) => {
     if (item.id === data.id) {
       const updatedTask: Partial<Task> = {
         title: data?.title ? data.title : item.title,
@@ -43,4 +53,6 @@ export function handleEditTask(
     }
     return item;
   });
+  saveTasksToLocalStorage(updatedTasks);
+  return updatedTasks;
 }

@@ -11,7 +11,7 @@
 
   let formattedDate = formatDateISO(dueDate);
 
-  let taskTitleInputElement: HTMLInputElement = undefined;
+  let taskTitleInputElement: HTMLInputElement;
 
   const dispatch = createEventDispatcher<TaskEvent>();
 

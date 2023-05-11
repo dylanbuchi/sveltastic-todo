@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import TaskForm from "./lib/tasks/TaskForm.svelte";
   import TaskList from "./lib/tasks/TaskList.svelte";
   import type { Task } from "./models/task.model";
@@ -9,8 +10,13 @@
     handleRemoveTask,
     handleToggleCompleteTask,
   } from "./utils/handlers/tasks.handlers";
+  import { loadTasksFromLocalStorage } from "./utils/helpers/local-storage.helpers";
 
   let tasks: Task[] = [];
+
+  onMount(() => {
+    tasks = loadTasksFromLocalStorage();
+  });
 </script>
 
 <main class="container is-centered">

@@ -18,7 +18,9 @@
 
   let isEditingTask = false;
   let editedTitle = task.title;
-  let editedDueDate = task?.dueDate.toISOString().slice(0, 10);
+
+  let editedDueDate =
+    task.dueDate?.toISOString().slice(0, 10) ?? new Date().toISOString();
 
   let editInput: HTMLInputElement;
 
@@ -112,7 +114,7 @@
       </div>
     {:else}
       <span class="has-text-grey" class:crossed={task.completed}
-        >Due: {formatDate(task?.dueDate)}</span
+        >Due: {task?.dueDate && formatDate(task.dueDate)}</span
       >
     {/if}
   </div>
