@@ -22,6 +22,7 @@
     "@formkit/auto-animate": "1.0.0-beta.6",
     "bulma": "^0.9.4",
     "lucide-svelte": "^0.214.0",
-    "nanoid": "^4.0.2"
+    "nanoid": "^4.0.2",
+    "zod": "^3.21.4"
   }
 }
