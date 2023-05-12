@@ -2,14 +2,18 @@
   import { afterUpdate } from "svelte";
   import type { Task } from "../../models/task.model";
   import { Edit2Icon, SaveIcon, Trash2, XIcon } from "lucide-svelte";
-  import TaskButtons from "./TaskButtons.svelte";
+
   import { formatDate, formatDateISO } from "../../utils/helpers/date.helpers";
   import { tasks } from "../../store/tasks.store";
+  import TaskIcons from "./TaskIcons.svelte";
 
   export let task: Task;
 
   let isEditingTask = false;
   let editedTitle = task.title;
+
+  const expiredTask = true;
+  //   (task?.dueDate && isDateOlderThanOneDay(task?.dueDate)) ?? false;
 
   let editedDueDate =
     task.dueDate?.toISOString().slice(0, 10) ?? new Date().toISOString();
@@ -69,7 +73,7 @@
           <span class:crossed={task.completed}>{task.title}</span>
         </div>
       </div>
-      <TaskButtons
+      <TaskIcons
         action={handleEditClick}
         icon={Edit2Icon}
         secondaryAction={() => tasks.remove(task.id)}
@@ -89,7 +93,7 @@
           </div>
         </div>
       </div>
-      <TaskButtons
+      <TaskIcons
         action={handleSaveTaskWrapper}
         icon={SaveIcon}
         secondaryAction={handleCancelClick}

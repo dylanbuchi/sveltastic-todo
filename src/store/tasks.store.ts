@@ -83,7 +83,7 @@ function createTasks() {
         return newTasks;
       });
     },
-    transform: (tasks: Task[], option: "completed" | "active") => {
+    transform: (option: "completed" | "active") => {
       update((tasks) => {
         const newTasks = setAllTasks(tasks, option);
         saveTasksToLocalStorage(newTasks);

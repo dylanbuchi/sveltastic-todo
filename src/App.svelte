@@ -1,25 +1,38 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import TaskForm from "./lib/tasks/TaskForm.svelte";
   import TaskList from "./lib/tasks/TaskList.svelte";
-  import type { Task } from "./models/task.model";
   import { APP_NAME } from "./utils/constants/app.constants";
 
-  import { loadTasksFromLocalStorage } from "./utils/helpers/local-storage.helpers";
   import TaskFilterPanel from "./lib/tasks/TaskFilterPanel.svelte";
-
-  let tasks: Task[] = [];
-
-  onMount(() => {
-    tasks = loadTasksFromLocalStorage();
-  });
+  import TaskActions from "./lib/tasks/TaskActions.svelte";
+  import { tasks } from "./store/tasks.store";
 </script>
 
-<main class="container is-centered">
-  <div class="card-content">
-    <h1 class="title has-text-centered">{APP_NAME}</h1>
-    <TaskForm />
-    <TaskFilterPanel />
-    <TaskList />
+<main class="container mx-auto">
+  <h1 class="mt-4 title has-text-centered">{APP_NAME}</h1>
+  <div class="columns">
+    {#if $tasks.length}
+      <div class="column is-one-quarter">
+        <TaskFilterPanel />
+      </div>
+    {/if}
+    <div class="column">
+      <div class={$tasks.length ? "card" : undefined}>
+        <div class="pt-5 px-5">
+          <TaskForm />
+        </div>
+        {#if $tasks.length}
+          <div class="card-content">
+            <h2 class="title is-4">Tasks</h2>
+            <TaskList />
+          </div>
+        {/if}
+      </div>
+    </div>
+    {#if $tasks.length}
+      <div class="column is-one-quarter">
+        <TaskActions />
+      </div>
+    {/if}
   </div>
 </main>
