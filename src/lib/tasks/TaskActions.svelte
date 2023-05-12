@@ -1,7 +1,10 @@
 <script lang="ts">
   import { tasks } from "../../store/tasks.store";
   import { formatTitle } from "../../utils/helpers/string.helpers";
-  import { checkIsAllCompleted } from "../../utils/helpers/tasks.helpers";
+  import {
+    checkIsAllCompleted,
+    checkSomeAreCompleted,
+  } from "../../utils/helpers/tasks.helpers";
 
   let option: "active" | "completed";
 
@@ -21,7 +24,7 @@
   <button on:click={tasks.clear} class="mt-2 button is-fullwidth is-danger">
     Delete All</button
   >
-  {#if option !== "completed"}
+  {#if checkSomeAreCompleted($tasks)}
     <button
       on:click={tasks.deleteAllCompleted}
       class="mt-2 button is-fullwidth is-danger">Delete All Completed</button
