@@ -16,6 +16,13 @@ function sortByDate(order: string) {
   };
 }
 
+function filterTasksBySearch(tasks: Task[], search: string) {
+  if (search === "") return tasks;
+  return tasks.filter((task) =>
+    task.title.trim().toLowerCase().includes(search.toLowerCase().trim())
+  );
+}
+
 function sortByName(order: string) {
   const sortOrder = order === "name-desc" ? -1 : 1;
   return (a: Task, b: Task) => {
@@ -76,12 +83,14 @@ function createTasks() {
 }
 
 export const tasks = createTasks();
+
 export const taskFilterOption = writable("all");
+export const taskSearch = writable("");
 
 export const filteredTasks = derived(
-  [tasks, taskFilterOption],
-  ([$tasks, $option]) =>
-    $tasks.filter((item: Task) => {
+  [tasks, taskFilterOption, taskSearch],
+  ([$tasks, $option, $taskSearch]) =>
+    filterTasksBySearch($tasks, $taskSearch).filter((item: Task) => {
       if ($option === "all") {
         return item;
       }
