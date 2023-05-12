@@ -5,7 +5,7 @@
 
   import TaskFilterPanel from "./lib/tasks/TaskFilterPanel.svelte";
   import TaskActions from "./lib/tasks/TaskActions.svelte";
-  import { tasks } from "./store/tasks.store";
+  import { taskSearch, tasks, filteredTasks } from "./store/tasks.store";
 </script>
 
 <main class="container mx-auto">
@@ -18,13 +18,19 @@
     {/if}
     <div class="column">
       <div class={$tasks.length ? "card" : undefined}>
-        <div class="pt-5 px-5">
+        <div class="p-5">
           <TaskForm />
         </div>
         {#if $tasks.length}
-          <div class="card-content">
+          <div
+            class="card-content"
+            style="max-height: 65vh; overflow-y: scroll;"
+          >
             <h2 class="title is-4">Tasks</h2>
             <TaskList />
+            {#if !$filteredTasks.length && $taskSearch}
+              <h3 class="has-text-centered">No Tasks found</h3>
+            {/if}
           </div>
         {/if}
       </div>
