@@ -4,6 +4,10 @@ import {
   loadTasksFromLocalStorage,
   saveTasksToLocalStorage,
 } from "../utils/helpers/local-storage.helpers";
+import {
+  deleteAllCompleted,
+  setAllTasks,
+} from "../utils/helpers/tasks.helpers";
 
 const initialTasks = loadTasksFromLocalStorage();
 
@@ -75,7 +79,21 @@ function createTasks() {
         } else {
           newTasks.sort(sortByDate(order));
         }
-
+        saveTasksToLocalStorage(newTasks);
+        return newTasks;
+      });
+    },
+    transform: (tasks: Task[], option: "completed" | "active") => {
+      update((tasks) => {
+        const newTasks = setAllTasks(tasks, option);
+        saveTasksToLocalStorage(newTasks);
+        return newTasks;
+      });
+    },
+    deleteAllCompleted: () => {
+      update((tasks) => {
+        const newTasks = deleteAllCompleted(tasks);
+        saveTasksToLocalStorage(newTasks);
         return newTasks;
       });
     },
