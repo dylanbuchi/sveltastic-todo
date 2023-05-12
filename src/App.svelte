@@ -6,6 +6,7 @@
   import { APP_NAME } from "./utils/constants/app.constants";
 
   import { loadTasksFromLocalStorage } from "./utils/helpers/local-storage.helpers";
+  import TaskFilterPanel from "./lib/tasks/TaskFilterPanel.svelte";
 
   let tasks: Task[] = [];
 
@@ -18,6 +19,7 @@
   <div class="card-content">
     <h1 class="title has-text-centered">{APP_NAME}</h1>
     <TaskForm />
+    <TaskFilterPanel />
     <TaskList />
   </div>
 </main>
