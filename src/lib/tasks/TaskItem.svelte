@@ -1,20 +1,12 @@
 <script lang="ts">
-  import { afterUpdate, createEventDispatcher } from "svelte";
+  import { afterUpdate } from "svelte";
   import type { Task } from "../../models/task.model";
   import { Edit2Icon, SaveIcon, Trash2, XIcon } from "lucide-svelte";
   import TaskButtons from "./TaskButtons.svelte";
   import { formatDate, formatDateISO } from "../../utils/helpers/date.helpers";
-  import {
-    type TaskEvent,
-    createTaskEventHandlers,
-  } from "../../utils/events/tasks.events";
+  import { tasks } from "../../store/tasks.store";
 
   export let task: Task;
-
-  const dispatch = createEventDispatcher<TaskEvent>();
-
-  const { handleEditTask, handleRemoveTask, handleToggleCompleteTask } =
-    createTaskEventHandlers(dispatch);
 
   let isEditingTask = false;
   let editedTitle = task.title;
@@ -33,7 +25,10 @@
   }
 
   function handleSaveTaskWrapper() {
-    handleEditTask(task, editedTitle, editedDueDate);
+    tasks.update(task.id, {
+      title: editedTitle,
+      dueDate: new Date(editedDueDate),
+    });
     isEditingTask = false;
   }
 
@@ -64,7 +59,8 @@
             class="css-checkbox"
             name="title"
             type="checkbox"
-            on:change={() => handleToggleCompleteTask(task)}
+            on:change={() =>
+              tasks.update(task.id, { completed: !task.completed })}
             bind:checked={task.completed}
           />
           <label class="checkbox" for={task.id} />
@@ -76,7 +72,7 @@
       <TaskButtons
         action={handleEditClick}
         icon={Edit2Icon}
-        secondaryAction={() => handleRemoveTask(task)}
+        secondaryAction={() => tasks.remove(task.id)}
         secondaryIcon={Trash2}
       />
     {:else}

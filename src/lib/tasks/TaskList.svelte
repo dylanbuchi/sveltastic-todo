@@ -1,16 +1,13 @@
 <script lang="ts">
-  import type { Task } from "../../models/task.model";
-
+  import { tasks } from "../../store/tasks.store";
   import TaskItem from "./TaskItem.svelte";
   import autoAnimate from "@formkit/auto-animate";
-
-  export let tasks: Task[];
 </script>
 
 <ul use:autoAnimate>
-  {#each tasks as task (task.id)}
+  {#each $tasks as task (task.id)}
     <li>
-      <TaskItem on:editTask on:toggleComplete on:removeTask {task} />
+      <TaskItem {task} />
     </li>
   {/each}
 </ul>

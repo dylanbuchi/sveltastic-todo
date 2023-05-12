@@ -4,12 +4,7 @@
   import TaskList from "./lib/tasks/TaskList.svelte";
   import type { Task } from "./models/task.model";
   import { APP_NAME } from "./utils/constants/app.constants";
-  import {
-    handleAddTask,
-    handleEditTask,
-    handleRemoveTask,
-    handleToggleCompleteTask,
-  } from "./utils/handlers/tasks.handlers";
+
   import { loadTasksFromLocalStorage } from "./utils/helpers/local-storage.helpers";
 
   let tasks: Task[] = [];
@@ -22,13 +17,7 @@
 <main class="container is-centered">
   <div class="card-content">
     <h1 class="title has-text-centered">{APP_NAME}</h1>
-    <TaskForm on:addTask={(event) => (tasks = handleAddTask(tasks, event))} />
-    <TaskList
-      on:editTask={(event) => (tasks = handleEditTask(tasks, event))}
-      on:toggleComplete={(event) =>
-        (tasks = handleToggleCompleteTask(tasks, event))}
-      on:removeTask={(event) => (tasks = handleRemoveTask(tasks, event))}
-      {tasks}
-    />
+    <TaskForm />
+    <TaskList />
   </div>
 </main>
