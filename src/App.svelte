@@ -6,9 +6,13 @@
   import TaskFilterPanel from "./lib/tasks/TaskFilterPanel.svelte";
   import TaskActions from "./lib/tasks/TaskActions.svelte";
   import { taskSearch, tasks, filteredTasks } from "./store/tasks.store";
+  import Footer from "./lib/Footer.svelte";
 </script>
 
-<main class="container mx-auto">
+<main
+  class="container mx-auto pb-6"
+  style={!$tasks.length ? "height: 100vh" : ""}
+>
   <h1 class="mt-4 title has-text-centered">{APP_NAME}</h1>
   <div class="columns">
     {#if $tasks.length}
@@ -42,3 +46,4 @@
     {/if}
   </div>
 </main>
+<Footer />
