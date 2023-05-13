@@ -13,7 +13,7 @@ A task management web app that allows users to create, edit, remove, search, fil
 
 ---
 
-![Screenshot (61)](https://github.com/dylanbuchi/sveltastic-todo/assets/52018183/ae7ae5cc-c1d8-4ebb-bc9e-73bc7909c3aa)
+![Screenshot (61)](https://github.com/dylanbuchi/sveltastic-todo/assets/52018183/a753c11e-e57a-4e2d-a41a-0c6be43ae2c1)
 
 ---
 
