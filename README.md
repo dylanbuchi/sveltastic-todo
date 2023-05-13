@@ -6,6 +6,8 @@ A task management web app that allows users to create, edit, remove, search, fil
 
 ### Built with:
 [![Svelte](https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00)](https://svelte.dev/) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Bulma](https://img.shields.io/badge/Bulma-00D1B2?style=for-the-badge&logo=Bulma&logoColor=white)](https://bulma.io/)
+[![Vite.js](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
+
 
 
 
@@ -22,7 +24,7 @@ All commands are run from the root of the project, from a terminal:
 | Command        | Action                                      |
 | :------------- | :------------------------------------------ |
 | `pnpm install` | Installs dependencies                       |
-| `pnpm dev`     | Starts local dev server at `localhost:3000` |
+| `pnpm dev`     | Starts local dev server at `localhost:5173` |
 | `pnpm build`   | Build your production site                  |
 
 ## Author
