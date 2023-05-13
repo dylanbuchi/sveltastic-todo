@@ -1,24 +1,15 @@
 <script lang="ts">
   import { deleteTasksModal } from "../../store/modals.store";
-  import { tasks } from "../../store/tasks.store";
   import Modal from "./Modal.svelte";
 
-  export let deleteAllCompletedButtonIsClicked = false;
+  export let deleteAllCompletedButtonIsClicked: boolean;
+  export let handleConfirm: () => void;
+  export let handleCancel: () => void;
 </script>
 
 <Modal
-  handleCancel={() => {
-    deleteTasksModal.closeModal();
-  }}
-  handleConfirm={() => {
-    if (deleteAllCompletedButtonIsClicked) {
-      tasks.deleteAllCompleted();
-    } else {
-      tasks.clear();
-    }
-
-    deleteTasksModal.closeModal();
-  }}
+  {handleCancel}
+  {handleConfirm}
   title="Confirmation"
   message="Are you sure you want to delete all the {deleteAllCompletedButtonIsClicked
     ? 'completed'

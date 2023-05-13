@@ -14,6 +14,21 @@
   $: {
     option = checkIsAllCompleted($tasks) ? "active" : "completed";
   }
+
+  function handleConfirm() {
+    if (deleteAllCompletedButtonIsClicked) {
+      tasks.deleteAllCompleted();
+      deleteAllCompletedButtonIsClicked = false;
+    } else {
+      tasks.clear();
+    }
+    deleteTasksModal.closeModal();
+  }
+
+  function handleCancel() {
+    deleteAllCompletedButtonIsClicked = false;
+    deleteTasksModal.closeModal();
+  }
 </script>
 
 <section class="box p-5 is-flex is-flex-direction-column">
@@ -33,5 +48,9 @@
       class="mt-2 button is-fullwidth is-danger">Delete All Completed</button
     >
   {/if}
-  <DeleteTasksModal {deleteAllCompletedButtonIsClicked} />
+  <DeleteTasksModal
+    {deleteAllCompletedButtonIsClicked}
+    {handleCancel}
+    {handleConfirm}
+  />
 </section>
