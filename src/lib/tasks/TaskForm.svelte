@@ -3,6 +3,9 @@
   import { onMount } from "svelte";
   import { formatDateISO } from "../../utils/helpers/date.helpers";
   import { tasks } from "../../store/tasks.store";
+  import { scrollWindowToTop } from "../../utils/helpers/dom.helpers";
+
+  export let handleScrollTop: () => void;
 
   let taskTitle = "";
 
@@ -13,6 +16,8 @@
   let taskTitleInputElement: HTMLInputElement;
 
   function handleSubmit() {
+    handleScrollTop();
+
     focusInput();
 
     if (taskTitle.trim().length > 0) {
@@ -31,6 +36,7 @@
   }
 
   function focusInput() {
+    scrollWindowToTop();
     taskTitleInputElement.focus();
   }
 
