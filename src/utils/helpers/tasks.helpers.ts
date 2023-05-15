@@ -1,4 +1,5 @@
 import type { Task } from "../../models/task.model";
+import type { TaskCompletedOrActive } from "../../types/tasks.types";
 import { isDateOlderThanOneDay } from "./date.helpers";
 
 export function checkIsAllCompleted(tasks: Task[]) {
@@ -9,7 +10,7 @@ export function checkSomeAreCompleted(tasks: Task[]) {
   return tasks?.length > 0 && tasks.some((task) => task.completed);
 }
 
-export function setAllTasks(tasks: Task[], option: "active" | "completed") {
+export function setAllTasks(tasks: Task[], option: TaskCompletedOrActive) {
   const lowerOption = option.toLowerCase();
   if (lowerOption === "completed") {
     return tasks.map((task) => ({ ...task, completed: true }));

@@ -10,10 +10,15 @@ import {
   setAllTasks,
 } from "../utils/helpers/tasks.helpers";
 import { isDateOlderThanOneDay } from "../utils/helpers/date.helpers";
+import type {
+  TaskCompletedOrActive,
+  TaskFilterOption,
+  TaskSortOption,
+} from "../types/tasks.types";
 
 const initialTasks = loadTasksFromLocalStorage();
 
-function sortByDate(order: string) {
+function sortByDate(order: TaskSortOption) {
   const sortOrder = order === "date-desc" ? -1 : 1;
   return (a: Task, b: Task) => {
     if (a?.dueDate == null || b?.dueDate == null) return 1;
@@ -29,7 +34,7 @@ function filterTasksBySearch(tasks: Task[], search: string) {
   );
 }
 
-function sortByName(order: string) {
+function sortByName(order: TaskSortOption) {
   const sortOrder = order === "name-desc" ? -1 : 1;
   return (a: Task, b: Task) => {
     if (a?.title == null || b?.title == null) return 0;
@@ -73,7 +78,7 @@ function createTasks() {
       set([]);
       saveTasksToLocalStorage([]);
     },
-    sort: (order: string) => {
+    sort: (order: TaskSortOption) => {
       update((tasks) => {
         const newTasks = [...tasks];
         if (order === "name-asc" || order === "name-desc") {
@@ -85,7 +90,7 @@ function createTasks() {
         return newTasks;
       });
     },
-    transform: (option: "completed" | "active") => {
+    transform: (option: TaskCompletedOrActive) => {
       update((tasks) => {
         const newTasks = setAllTasks(tasks, option);
         saveTasksToLocalStorage(newTasks);
@@ -112,7 +117,7 @@ function createTasks() {
 
 export const tasks = createTasks();
 
-export const taskFilterOption = writable("all");
+export const taskFilterOption = writable<TaskFilterOption>("all");
 export const taskSearch = writable("");
 
 export const filteredTasks = derived(
