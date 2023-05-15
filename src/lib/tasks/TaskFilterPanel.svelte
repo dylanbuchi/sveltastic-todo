@@ -1,8 +1,29 @@
 <script lang="ts">
   import { tasks, taskFilterOption, taskSearch } from "../../store/tasks.store";
+  import type {
+    TaskFilterOption,
+    TaskSortOption,
+  } from "../../types/tasks.types";
+  import {
+    taskFilterOptionToName,
+    taskSortOptionToName,
+  } from "../../utils/constants/tasks.constants";
   import { checkHasExpiredTasks } from "../../utils/helpers/tasks.helpers";
 
-  let sortOption: string = "date-asc";
+  let sortOption: TaskSortOption = "date-asc";
+
+  let expiredOption: HTMLOptionElement;
+
+  let taskFilterOptions = Object.entries(taskFilterOptionToName).map(
+    ([key, value]) => ({
+      key: key as TaskFilterOption,
+      value,
+    })
+  );
+
+  $: if (expiredOption) {
+    expiredOption.hidden = !checkHasExpiredTasks($tasks);
+  }
 
   $: {
     tasks.sort(sortOption);
@@ -20,10 +41,12 @@
         <div class="field has-addons control is-expanded">
           <input
             bind:value={$taskSearch}
+            id="tasks-search"
             name="tasks-search"
             class="input"
             type="text"
             placeholder="Search tasks..."
+            aria-label="Search tasks"
           />
           {#if $taskSearch}
             <button
@@ -37,27 +60,34 @@
         <label for="tasks-sort" class="label">Sort by</label>
         <div class="select is-fullwidth">
           <select
-            class="is-fullwidth"
+            id="tasks-sort"
             name="tasks-sort"
+            class="is-fullwidth"
+            aria-label="Sort tasks by"
             bind:value={sortOption}
           >
-            <option value="name-asc">Name (A-Z)</option>
-            <option value="name-desc">Name (Z-A)</option>
-            <option value="date-asc">Due Date (Newest)</option>
-            <option value="date-desc">Due Date (Oldest)</option>
+            {#each Object.entries(taskSortOptionToName) as [key, value]}
+              <option value={key}>{value}</option>
+            {/each}
           </select>
         </div>
       </div>
       <div class="mt-2 card p-3 is-fullwidth is-flex-grow-1">
         <label for="tasks-filter" class="label">Show</label>
         <div class="select is-fullwidth">
-          <select name="tasks-filter" bind:value={$taskFilterOption}>
-            <option value="all">All tasks</option>
-            <option value="completed">Completed tasks</option>
-            <option value="active">Active tasks</option>
-            {#if checkHasExpiredTasks($tasks)}
-              <option value="expired">Expired tasks</option>
-            {/if}
+          <select
+            id="tasks-filter"
+            name="tasks-filter"
+            aria-label="Filter tasks by"
+            bind:value={$taskFilterOption}
+          >
+            {#each taskFilterOptions as { key, value }}
+              {#if key === "expired"}
+                <option bind:this={expiredOption} value={key}>{value}</option>
+              {:else}
+                <option value={key}>{value}</option>
+              {/if}
+            {/each}
           </select>
         </div>
       </div>
