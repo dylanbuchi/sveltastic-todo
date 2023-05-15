@@ -3,7 +3,11 @@
   import type { Task } from "../../models/task.model";
   import { Edit2Icon, SaveIcon, Trash2, XIcon } from "lucide-svelte";
 
-  import { formatDate, formatDateISO } from "../../utils/helpers/date.helpers";
+  import {
+    formatDate,
+    formatDateISO,
+    isDateOlderThanOneDay,
+  } from "../../utils/helpers/date.helpers";
   import { tasks } from "../../store/tasks.store";
   import TaskIcons from "./TaskIcons.svelte";
 
@@ -12,8 +16,8 @@
   let isEditingTask = false;
   let editedTitle = task.title;
 
-  const expiredTask = true;
-  //   (task?.dueDate && isDateOlderThanOneDay(task?.dueDate)) ?? false;
+  const expiredTask =
+    (task?.dueDate && isDateOlderThanOneDay(task?.dueDate)) ?? false;
 
   let editedDueDate =
     task.dueDate?.toISOString().slice(0, 10) ?? new Date().toISOString();
@@ -52,7 +56,7 @@
 <div
   class="mt-5 box {task.completed && !isEditingTask
     ? 'has-background-grey-lighter'
-    : ''}"
+    : ''} {expiredTask ? 'expired' : ''}"
 >
   <div class="columns is-mobile is-flex is-align-items-center">
     {#if !isEditingTask}
@@ -181,5 +185,9 @@
     font-size: 10px;
     height: 36px;
     width: 36px;
+  }
+  .expired {
+    border: 2px solid rgb(147, 12, 12);
+    background-color: rgb(239, 214, 214);
   }
 </style>

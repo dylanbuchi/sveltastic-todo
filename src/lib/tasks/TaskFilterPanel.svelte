@@ -1,5 +1,6 @@
 <script lang="ts">
   import { tasks, taskFilterOption, taskSearch } from "../../store/tasks.store";
+  import { checkHasExpiredTasks } from "../../utils/helpers/tasks.helpers";
 
   let sortOption: string = "date-asc";
 
@@ -54,6 +55,9 @@
             <option value="all">All tasks</option>
             <option value="completed">Completed tasks</option>
             <option value="active">Active tasks</option>
+            {#if checkHasExpiredTasks($tasks)}
+              <option value="expired">Expired tasks</option>
+            {/if}
           </select>
         </div>
       </div>

@@ -6,8 +6,10 @@ import {
 } from "../utils/helpers/local-storage.helpers";
 import {
   deleteAllCompleted,
+  deleteAllExpired,
   setAllTasks,
 } from "../utils/helpers/tasks.helpers";
+import { isDateOlderThanOneDay } from "../utils/helpers/date.helpers";
 
 const initialTasks = loadTasksFromLocalStorage();
 
@@ -97,6 +99,14 @@ function createTasks() {
         return newTasks;
       });
     },
+
+    deleteAllExpired: () => {
+      update((tasks) => {
+        const newTasks = deleteAllExpired(tasks);
+        saveTasksToLocalStorage(newTasks);
+        return newTasks;
+      });
+    },
   };
 }
 
@@ -116,5 +126,7 @@ export const filteredTasks = derived(
         return item.completed;
       }
       if ($option === "active") return !item.completed;
+      if ($option === "expired")
+        return item?.dueDate && isDateOlderThanOneDay(item.dueDate);
     })
 );

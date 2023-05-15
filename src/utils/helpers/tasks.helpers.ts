@@ -1,4 +1,5 @@
 import type { Task } from "../../models/task.model";
+import { isDateOlderThanOneDay } from "./date.helpers";
 
 export function checkIsAllCompleted(tasks: Task[]) {
   return tasks?.length > 0 && tasks.every((task) => task.completed);
@@ -21,4 +22,21 @@ export function setAllTasks(tasks: Task[], option: "active" | "completed") {
 
 export function deleteAllCompleted(tasks: Task[]) {
   return tasks.filter((task) => !task.completed);
+}
+
+export function deleteAllExpired(tasks: Task[]) {
+  return tasks.filter((task) => {
+    if (task?.dueDate) {
+      return !isDateOlderThanOneDay(task.dueDate);
+    }
+    return task;
+  });
+}
+
+export function checkHasExpiredTasks(tasks: Task[]) {
+  return tasks.some((task) => {
+    if (task?.dueDate) {
+      return isDateOlderThanOneDay(task.dueDate);
+    }
+  });
 }

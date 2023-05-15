@@ -2,6 +2,7 @@
   import { deleteTasksModal } from "../../store/modals.store";
   import { tasks } from "../../store/tasks.store";
   import {
+    checkHasExpiredTasks,
     checkIsAllCompleted,
     checkSomeAreCompleted,
   } from "../../utils/helpers/tasks.helpers";
@@ -10,6 +11,7 @@
   let option: "active" | "completed";
 
   $: deleteAllCompletedButtonIsClicked = false;
+  $: hasExpiredTasks = checkHasExpiredTasks($tasks);
 
   $: {
     option = checkIsAllCompleted($tasks) ? "active" : "completed";
@@ -46,6 +48,15 @@
         deleteTasksModal.openModal();
       }}
       class="mt-2 button is-fullwidth is-danger">Delete All Completed</button
+    >
+  {/if}
+
+  {#if hasExpiredTasks}
+    <button
+      on:click={() => {
+        tasks.deleteAllExpired();
+      }}
+      class="mt-2 button is-fullwidth is-danger">Delete All Expired</button
     >
   {/if}
   <DeleteTasksModal
