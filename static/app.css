@@ -1,4 +1,4 @@
-@import url('../node_modules/bulma/css/bulma.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css');
 
 input.session-date {
 	position: relative;
