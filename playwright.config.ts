@@ -9,5 +9,4 @@ const config: PlaywrightTestConfig = {
 	testMatch: /(.+\.)?(test|spec)\.[jt]s/
 };
 
-export default config; 
- 
+export default config;
