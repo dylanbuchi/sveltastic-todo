@@ -1,38 +1,31 @@
-# create-svelte
+# sveltastic-todo
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+A task management web app that allows users to create, edit, remove, search, filter and sort tasks.
 
-## Creating a project
+<p align="left">Website: https://sveltastic-todo.vercel.app</p>
 
-If you're seeing this, you've probably already done this step. Congrats!
+### Built with:
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+[![SvelteKit](https://img.shields.io/badge/SvelteKit-FF3E00?style=for-the-badge&logo=Svelte&logoColor=white)](https://kit.svelte.dev/)
+[![Svelte](https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00)](https://svelte.dev/) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Bulma](https://img.shields.io/badge/Bulma-00D1B2?style=for-the-badge&logo=Bulma&logoColor=white)](https://bulma.io/)
+[![Vite.js](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+---
 
-## Developing
+![Screenshot (61)](https://github.com/dylanbuchi/sveltastic-todo/assets/52018183/a753c11e-e57a-4e2d-a41a-0c6be43ae2c1)
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+---
 
-```bash
-npm run dev
+# ⌨️ Commands
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+All commands are run from the root of the project, from a terminal:
 
-## Building
+| Command        | Action                                      |
+| :------------- | :------------------------------------------ |
+| `pnpm install` | Installs dependencies                       |
+| `pnpm dev`     | Starts local dev server at `localhost:5173` |
+| `pnpm build`   | Build your production site                  |
 
-To create a production version of your app:
+## Author
 
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+- Website - [Dylan Buchi](https://dylanbuchi.com/)
