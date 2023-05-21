@@ -1,32 +1,38 @@
-# sveltastic-todo
+# create-svelte
 
-A task management web app that allows users to create, edit, remove, search, filter and sort tasks.
+Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
-<p align="left">Website: https://sveltastic-todo.vercel.app</p>
+## Creating a project
 
-### Built with:
-[![Svelte](https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00)](https://svelte.dev/) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Bulma](https://img.shields.io/badge/Bulma-00D1B2?style=for-the-badge&logo=Bulma&logoColor=white)](https://bulma.io/)
-[![Vite.js](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
+If you're seeing this, you've probably already done this step. Congrats!
 
+```bash
+# create a new project in the current directory
+npm create svelte@latest
 
+# create a new project in my-app
+npm create svelte@latest my-app
+```
 
+## Developing
 
----
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
-![Screenshot (61)](https://github.com/dylanbuchi/sveltastic-todo/assets/52018183/a753c11e-e57a-4e2d-a41a-0c6be43ae2c1)
+```bash
+npm run dev
 
----
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
 
-# ⌨️ Commands
+## Building
 
-All commands are run from the root of the project, from a terminal:
+To create a production version of your app:
 
-| Command        | Action                                      |
-| :------------- | :------------------------------------------ |
-| `pnpm install` | Installs dependencies                       |
-| `pnpm dev`     | Starts local dev server at `localhost:5173` |
-| `pnpm build`   | Build your production site                  |
+```bash
+npm run build
+```
 
-## Author
+You can preview the production build with `npm run preview`.
 
-- Website - [Dylan Buchi](https://dylanbuchi.com/)
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
