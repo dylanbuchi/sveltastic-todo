@@ -3,6 +3,10 @@ import type { Task } from '../models/task.model';
 import { deleteAllCompleted, deleteAllExpired, setAllTasks } from '../utils/helpers/tasks.helpers';
 import { isDateOlderThanOneDay } from '../utils/helpers/date.helpers';
 import type { TaskCompletedOrActive, TaskFilterOption, TaskSortOption } from '../types/tasks.types';
+import {
+	loadTasksFromLocalStorage,
+	saveTasksToLocalStorage
+} from '@/utils/helpers/local-storage.helpers';
 
 function sortByDate(order: TaskSortOption) {
 	const sortOrder = order === 'date-desc' ? -1 : 1;
@@ -30,18 +34,20 @@ function sortByName(order: TaskSortOption) {
 }
 
 function createTasks() {
-	const { subscribe, set, update } = writable<Task[]>([]);
+	const { subscribe, set, update } = writable<Task[]>(loadTasksFromLocalStorage() ?? []);
 
 	return {
 		subscribe,
 		add: (task: Task) =>
 			update((tasks) => {
 				const newTasks = [task, ...tasks];
+				saveTasksToLocalStorage(newTasks);
 				return newTasks;
 			}),
 		remove: (id: string) =>
 			update((tasks) => {
 				const newTasks = tasks.filter((task) => task.id !== id);
+				saveTasksToLocalStorage(newTasks);
 				return newTasks;
 			}),
 		update: (id: string, data: Partial<Task>) =>
@@ -55,9 +61,11 @@ function createTasks() {
 					}
 					return item;
 				});
+				saveTasksToLocalStorage(newTasks);
 				return newTasks;
 			}),
 		clear: () => {
+			saveTasksToLocalStorage([]);
 			set([]);
 		},
 		sort: (order: TaskSortOption) => {
@@ -68,18 +76,21 @@ function createTasks() {
 				} else {
 					newTasks.sort(sortByDate(order));
 				}
+				saveTasksToLocalStorage(newTasks);
 				return newTasks;
 			});
 		},
 		transform: (option: TaskCompletedOrActive) => {
 			update((tasks) => {
 				const newTasks = setAllTasks(tasks, option);
+				saveTasksToLocalStorage(newTasks);
 				return newTasks;
 			});
 		},
 		deleteAllCompleted: () => {
 			update((tasks) => {
 				const newTasks = deleteAllCompleted(tasks);
+				saveTasksToLocalStorage(newTasks);
 				return newTasks;
 			});
 		},
@@ -87,6 +98,7 @@ function createTasks() {
 		deleteAllExpired: () => {
 			update((tasks) => {
 				const newTasks = deleteAllExpired(tasks);
+				saveTasksToLocalStorage(newTasks);
 				return newTasks;
 			});
 		}
