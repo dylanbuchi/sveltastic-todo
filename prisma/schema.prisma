@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Task {
+    id        String  @id @unique @default(cuid())
+    title     String
+    completed Boolean @default(false)
+
+    dueDate   DateTime? @map("due_date")
+    createdAt DateTime  @default(now()) @map("created_at")
+    updatedAt DateTime  @updatedAt @map("updated_at")
+
+    userId   String?   @map("user_id")
+    authUser AuthUser? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+    @@map("task")
+}
+
+model AuthUser {
+    id    String  @id @unique
+    name  String?
+    email String? @unique
+
+    tasks        Task[]
+    auth_key     AuthKey[]
+    auth_session AuthSession[]
+
+    @@map("auth_user")
+}
+
+model AuthSession {
+    id             String   @id @unique
+    user_id        String
+    active_expires BigInt
+    idle_expires   BigInt
+    auth_user      AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+    @@index([user_id])
+    @@map("auth_session")
+}
+
+model AuthKey {
+    id              String   @id @unique
+    hashed_password String?
+    user_id         String
+    primary_key     Boolean
+    expires         BigInt?
+    auth_user       AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+    @@index([user_id])
+    @@map("auth_key")
+}
