@@ -1,12 +1,10 @@
 import { derived, writable } from 'svelte/store';
-import type { Task } from '../models/task.model';
 import { deleteAllCompleted, deleteAllExpired, setAllTasks } from '../utils/helpers/tasks.helpers';
 import { isDateOlderThanOneDay } from '../utils/helpers/date.helpers';
 import type { TaskCompletedOrActive, TaskFilterOption, TaskSortOption } from '../types/tasks.types';
-import {
-	loadTasksFromLocalStorage,
-	saveTasksToLocalStorage
-} from '@/utils/helpers/local-storage.helpers';
+
+import type { Task } from '@prisma/client';
+import { nanoid } from 'nanoid';
 
 function sortByDate(order: TaskSortOption) {
 	const sortOrder = order === 'date-desc' ? -1 : 1;
@@ -32,26 +30,88 @@ function sortByName(order: TaskSortOption) {
 		return sortOrder * a.title.localeCompare(b.title);
 	};
 }
+export const userId = writable('');
 
 function createTasks() {
-	const { subscribe, set, update } = writable<Task[]>(loadTasksFromLocalStorage() ?? []);
+	const { subscribe, set, update } = writable<Task[]>([]);
 
 	return {
+		set,
 		subscribe,
-		add: (task: Task) =>
+		add: async (title: string, dueDate: Date) => {
+			let originalTasks: Task[] = [];
+
 			update((tasks) => {
-				const newTasks = [task, ...tasks];
-				saveTasksToLocalStorage(newTasks);
+				originalTasks = tasks;
+				const newTask: Task = {
+					id: nanoid(),
+					completed: false,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+					userId: null,
+					dueDate,
+					title
+				};
+				const newTasks = [newTask, ...tasks];
 				return newTasks;
-			}),
-		remove: (id: string) =>
+			});
+
+			try {
+				const response = await fetch('/tasks', {
+					method: 'POST',
+					body: JSON.stringify({ title, dueDate })
+				});
+
+				if (!response.ok) {
+					throw new Error(`${response.status} - ${response.statusText}`);
+				}
+
+				const data = await response.json();
+				const task: Task = {
+					...data,
+					dueDate: new Date(data.dueDate),
+					createdAt: new Date(data.createdAt),
+					updatedAt: new Date(data.updatedAt)
+				};
+
+				update((tasks) => {
+					let newTasks = tasks.filter((item) => item.userId);
+					newTasks = [task, ...newTasks];
+					return newTasks;
+				});
+			} catch (error) {
+				set(originalTasks);
+				console.error(error);
+			}
+		},
+		remove: async (id: string) => {
+			let originalTasks: Task[] = [];
+
 			update((tasks) => {
+				originalTasks = tasks;
 				const newTasks = tasks.filter((task) => task.id !== id);
-				saveTasksToLocalStorage(newTasks);
+
 				return newTasks;
-			}),
-		update: (id: string, data: Partial<Task>) =>
+			});
+
+			try {
+				const response = await fetch(`/tasks/${id}`, {
+					method: 'DELETE'
+				});
+
+				if (!response.ok) {
+					throw new Error(`${response.status} - ${response.statusText}`);
+				}
+			} catch (error) {
+				set(originalTasks);
+				console.error(error);
+			}
+		},
+		update: async (id: string, data: Partial<Task>) => {
+			let originalTasks: Task[] = [];
+
 			update((tasks) => {
+				originalTasks = tasks;
 				const newTasks = tasks.map((item) => {
 					if (item.id === id) {
 						return {
@@ -61,12 +121,42 @@ function createTasks() {
 					}
 					return item;
 				});
-				saveTasksToLocalStorage(newTasks);
 				return newTasks;
-			}),
-		clear: () => {
-			saveTasksToLocalStorage([]);
+			});
+
+			try {
+				const response = await fetch(`/tasks/${id}`, {
+					method: 'PATCH',
+					body: JSON.stringify(data)
+				});
+
+				if (!response.ok) {
+					throw new Error(`${response.status} - ${response.statusText}`);
+				}
+			} catch (error) {
+				set(originalTasks);
+				console.error(error);
+			}
+		},
+		clear: async () => {
+			let originalTasks: Task[] = [];
+
+			update((tasks) => (originalTasks = tasks));
+
 			set([]);
+			try {
+				const response = await fetch('/tasks', {
+					method: 'DELETE'
+				});
+
+				if (!response.ok) {
+					throw new Error(`${response.status} - ${response.statusText}`);
+				}
+			} catch (error) {
+				set(originalTasks);
+
+				console.error(error);
+			}
 		},
 		sort: (order: TaskSortOption) => {
 			update((tasks) => {
@@ -76,31 +166,50 @@ function createTasks() {
 				} else {
 					newTasks.sort(sortByDate(order));
 				}
-				saveTasksToLocalStorage(newTasks);
 				return newTasks;
 			});
 		},
 		transform: (option: TaskCompletedOrActive) => {
 			update((tasks) => {
 				const newTasks = setAllTasks(tasks, option);
-				saveTasksToLocalStorage(newTasks);
 				return newTasks;
 			});
 		},
-		deleteAllCompleted: () => {
+		deleteAllCompleted: async () => {
+			let originalTasks: Task[] = [];
 			update((tasks) => {
+				originalTasks = tasks;
 				const newTasks = deleteAllCompleted(tasks);
-				saveTasksToLocalStorage(newTasks);
 				return newTasks;
 			});
+			try {
+				await fetch('/tasks?completed=true', {
+					method: 'DELETE'
+				});
+			} catch (error) {
+				set(originalTasks);
+
+				console.error(error);
+			}
 		},
 
-		deleteAllExpired: () => {
+		deleteAllExpired: async () => {
+			let originalTasks: Task[] = [];
+
 			update((tasks) => {
+				originalTasks = tasks;
 				const newTasks = deleteAllExpired(tasks);
-				saveTasksToLocalStorage(newTasks);
 				return newTasks;
 			});
+
+			try {
+				await fetch('/tasks?expired=true', {
+					method: 'DELETE'
+				});
+			} catch (error) {
+				set(originalTasks);
+				console.error(error);
+			}
 		}
 	};
 }
