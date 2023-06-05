@@ -1,5 +1,9 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css');
 
+:root {
+	--navbar-height: auto;
+}
+
 input.session-date {
 	position: relative;
 	overflow: hidden;
