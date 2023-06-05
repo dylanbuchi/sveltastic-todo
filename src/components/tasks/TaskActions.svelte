@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { deleteTasksModal } from '../../store/modals.store';
-	import { tasks } from '../../store/tasks.store';
+	import { deleteTasksModal } from '@/store/modals.store';
+	import { tasks } from '@/store/tasks.store';
 	import {
 		checkHasExpiredTasks,
 		checkIsAllCompleted,
 		checkSomeAreCompleted
-	} from '../../utils/helpers/tasks.helpers';
+	} from '@/utils/helpers/tasks.helpers';
 	import DeleteTasksModal from '../modals/DeleteTasksModal.svelte';
 
 	let option: 'active' | 'completed';

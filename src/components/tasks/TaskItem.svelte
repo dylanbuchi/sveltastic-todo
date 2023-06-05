@@ -1,15 +1,12 @@
 <script lang="ts">
 	import { afterUpdate } from 'svelte';
-	import type { Task } from '../../models/task.model';
+
 	import { Edit2Icon, SaveIcon, Trash2, XIcon } from 'lucide-svelte';
 
-	import {
-		formatDate,
-		formatDateISO,
-		isDateOlderThanOneDay
-	} from '../../utils/helpers/date.helpers';
-	import { tasks } from '../../store/tasks.store';
+	import { formatDate, formatDateISO, isDateOlderThanOneDay } from '@/utils/helpers/date.helpers';
+	import { tasks } from '@/store/tasks.store';
 	import TaskIcons from './TaskIcons.svelte';
+	import type { Task } from '@prisma/client';
 
 	export let task: Task;
 

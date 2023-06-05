@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { nanoid } from 'nanoid';
 	import { onMount } from 'svelte';
-	import { formatDateISO } from '../../utils/helpers/date.helpers';
-	import { tasks } from '../../store/tasks.store';
-	import { scrollWindowToTop } from '../../utils/helpers/dom.helpers';
+	import { formatDateISO } from '@/utils/helpers/date.helpers';
+	import { tasks } from '@/store/tasks.store';
+	import { scrollWindowToTop } from '@/utils/helpers/dom.helpers';
 
 	export let handleScrollTop: () => void;
 
@@ -15,24 +14,17 @@
 
 	let taskTitleInputElement: HTMLInputElement;
 
-	function handleSubmit() {
-		handleScrollTop();
-
+	async function handleSubmit() {
 		focusInput();
 
 		if (taskTitle.trim().length > 0) {
-			const newTask = {
-				id: nanoid(),
-				title: taskTitle,
-				completed: false,
-				dueDate: new Date(formattedDate)
-			};
-
-			tasks.add(newTask);
+			tasks.add(taskTitle, new Date(formattedDate));
 
 			taskTitle = '';
 			dueDate = new Date();
 		}
+
+		handleScrollTop();
 	}
 
 	function focusInput() {
@@ -43,7 +35,7 @@
 	onMount(focusInput);
 </script>
 
-<form on:submit|preventDefault={handleSubmit}>
+<form on:submit|preventDefault>
 	<div class="field has-addons">
 		<div class="control is-expanded">
 			<input
@@ -63,7 +55,7 @@
 			/>
 		</div>
 		<div class="control">
-			<button class="button is-link" type="submit">Add Task</button>
+			<button class="button is-link" type="submit" on:click={() => handleSubmit()}>Add Task</button>
 		</div>
 	</div>
 </form>

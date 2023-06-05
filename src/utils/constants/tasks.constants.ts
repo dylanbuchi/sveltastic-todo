@@ -1,4 +1,4 @@
-import type { TaskFilterOption, TaskSortOption } from '../../types/tasks.types';
+import type { TaskFilterOption, TaskSortOption } from '@/types/tasks.types';
 
 export const taskSortOptionToName: Record<TaskSortOption, string> = {
 	'date-asc': 'Due Date (Newest)',

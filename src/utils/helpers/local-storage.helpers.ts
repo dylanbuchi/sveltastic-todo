@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import type { Task } from '../../models/task.model';
+import type { Task } from '@/models/task.model';
 import { TASKS_LOCAL_STORAGE_KEY } from '../constants/app.constants';
 import { taskJsonSchema } from '../validators/tasks.validators';
 

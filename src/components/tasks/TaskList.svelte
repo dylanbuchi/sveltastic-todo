@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { filteredTasks } from '../../store/tasks.store';
+	import { filteredTasks } from '@/store/tasks.store';
 	import TaskItem from './TaskItem.svelte';
 	import autoAnimate from '@formkit/auto-animate';
 </script>

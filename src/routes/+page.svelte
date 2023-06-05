@@ -1,27 +1,32 @@
 <script lang="ts">
-	import TaskForm from '../components/tasks/TaskForm.svelte';
-	import TaskList from '../components/tasks/TaskList.svelte';
-	import { APP_NAME } from '../utils/constants/app.constants';
+	import TaskForm from '@/components/tasks/TaskForm.svelte';
+	import TaskList from '@/components/tasks/TaskList.svelte';
 
-	import TaskFilterPanel from '../components/tasks/TaskFilterPanel.svelte';
-	import TaskActions from '../components/tasks/TaskActions.svelte';
-	import { taskSearch, tasks, filteredTasks } from '../store/tasks.store';
-	import Footer from '../components/Footer.svelte';
-	import { scrollWindowToTop } from '../utils/helpers/dom.helpers';
+	import TaskFilterPanel from '@/components/tasks/TaskFilterPanel.svelte';
+	import TaskActions from '@/components/tasks/TaskActions.svelte';
+	import { taskSearch, tasks, filteredTasks } from '@/store/tasks.store';
+	import { scrollWindowToTop } from '@/utils/helpers/dom.helpers';
 	import { onMount } from 'svelte';
+	import type { PageData } from './$types';
+	import type { Task } from '@prisma/client';
 
 	let taskListDiv: HTMLDivElement;
+
+	export let data: PageData;
+	$: userTasks = data.tasks;
 
 	function handleScrollTop() {
 		if (taskListDiv == null) return;
 		taskListDiv.scroll({ behavior: 'smooth', top: 0 });
 	}
 
-	onMount(scrollWindowToTop);
+	onMount(() => {
+		scrollWindowToTop();
+		tasks.set(userTasks ?? ([] as Task[]));
+	});
 </script>
 
-<main class="container mx-auto pb-6" style={!$tasks.length ? 'height: 100vh' : ''}>
-	<h1 class="mt-4 title has-text-centered">{APP_NAME}</h1>
+<div class="app p-4">
 	<div class="columns">
 		{#if $tasks.length}
 			<div
@@ -64,5 +69,10 @@
 			</div>
 		{/if}
 	</div>
-</main>
-<Footer />
+</div>
+
+<style>
+	.app {
+		min-height: calc(100vh - 3rem);
+	}
+</style>

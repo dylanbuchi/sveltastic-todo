@@ -1,5 +1,5 @@
 import type { Task } from '@prisma/client';
-import type { TaskCompletedOrActive } from '../../types/tasks.types';
+import type { TaskCompletedOrActive } from '@/types/tasks.types';
 import { isDateOlderThanOneDay } from './date.helpers';
 
 export function checkIsAllCompleted(tasks: Task[]) {
