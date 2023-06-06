@@ -4,11 +4,12 @@ export const load = async ({ locals }) => {
 	const { user } = await locals.auth.validateUser();
 
 	if (user) {
-		const tasks = (
-			await prismaClient.task.findMany({
-				where: { userId: user.userId }
-			})
-		).toReversed();
+		const data = await prismaClient.task.findMany({
+			where: { userId: user.userId }
+		});
+
+		const tasks = [...data];
+		tasks.reverse();
 		return { user, tasks };
 	}
 	return undefined;
