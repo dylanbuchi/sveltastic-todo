@@ -4,7 +4,7 @@
 	let currentYear = new Date().getFullYear();
 </script>
 
-<footer class="footer p-6">
+<footer class="footer py-5">
 	<div class="content has-text-centered">
 		<p>{APP_NAME} &copy; {currentYear} All rights reserved.</p>
 	</div>
