@@ -26,6 +26,9 @@ export const actions: Actions = {
 
 		try {
 			const registerData: RegisterFormData = { name, email, password };
+
+			registerSchema.parse(registerData);
+
 			const existingUser = await prismaClient.authUser.findUnique({
 				where: {
 					email: email
@@ -35,8 +38,6 @@ export const actions: Actions = {
 			if (existingUser) {
 				return fail(400, { error: 'Email already exists' });
 			}
-
-			registerSchema.parse(registerData);
 
 			const user = await auth.createUser({
 				primaryKey: {
