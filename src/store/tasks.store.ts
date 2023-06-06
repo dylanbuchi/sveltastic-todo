@@ -39,23 +39,6 @@ function createTasks() {
 		set,
 		subscribe,
 		add: async (title: string, dueDate: Date) => {
-			let originalTasks: Task[] = [];
-
-			update((tasks) => {
-				originalTasks = tasks;
-				const newTask: Task = {
-					id: nanoid(),
-					completed: false,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-					userId: null,
-					dueDate,
-					title
-				};
-				const newTasks = [newTask, ...tasks];
-				return newTasks;
-			});
-
 			try {
 				const response = await fetch('/tasks', {
 					method: 'POST',
@@ -80,7 +63,6 @@ function createTasks() {
 					return newTasks;
 				});
 			} catch (error) {
-				set(originalTasks);
 				console.error(error);
 			}
 		},
@@ -218,6 +200,7 @@ export const tasks = createTasks();
 
 export const taskFilterOption = writable<TaskFilterOption>('all');
 export const taskSearch = writable('');
+export const disableAnimation = writable(false);
 
 export const filteredTasks = derived(
 	[tasks, taskFilterOption, taskSearch],
