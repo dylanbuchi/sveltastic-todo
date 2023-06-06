@@ -1,6 +1,10 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { auth } from '@/server/lucia';
 import type { PageServerLoad, Actions } from './$types';
+import { z } from 'zod';
+import { LuciaError } from 'lucia-auth';
+import { registerSchema, type RegisterFormData } from '@/utils/validators/auth.validators';
+import { prismaClient } from '@/services/prisma';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const { session } = await locals.auth.validateUser();
@@ -21,6 +25,19 @@ export const actions: Actions = {
 		}
 
 		try {
+			const registerData: RegisterFormData = { name, email, password };
+			const existingUser = await prismaClient.authUser.findUnique({
+				where: {
+					email: email
+				}
+			});
+
+			if (existingUser) {
+				return fail(400, { error: 'Email already exists' });
+			}
+
+			registerSchema.parse(registerData);
+
 			const user = await auth.createUser({
 				primaryKey: {
 					providerId: 'email',
@@ -34,8 +51,15 @@ export const actions: Actions = {
 			});
 			const session = await auth.createSession(user.userId);
 			locals.auth.setSession(session);
-		} catch {
-			// email taken
+		} catch (error) {
+			if (error instanceof z.ZodError) {
+				const errorMessage = error.errors[0].message;
+				return fail(400, { error: errorMessage });
+			}
+
+			if (error instanceof LuciaError) {
+				return fail(400, { error: error.message });
+			}
 			return fail(400);
 		}
 	}
