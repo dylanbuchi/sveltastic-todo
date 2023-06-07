@@ -12,32 +12,6 @@ import type { TaskCompletedOrActive, TaskFilterOption, TaskSortOption } from '..
 
 import type { Task } from '@prisma/client';
 
-function sortByDate(order: TaskSortOption) {
-	const sortOrder = order === 'date-desc' ? -1 : 1;
-	return (a: Task, b: Task) => {
-		if (a?.dueDate == null || b?.dueDate == null) return 1;
-
-		return sortOrder * (b.dueDate.getTime() - a.dueDate.getTime());
-	};
-}
-
-function filterTasksBySearch(tasks: Task[], search: string) {
-	if (search === '') return tasks;
-	return tasks.filter((task) =>
-		task.title.trim().toLowerCase().includes(search.toLowerCase().trim())
-	);
-}
-
-function sortByName(order: TaskSortOption) {
-	const sortOrder = order === 'name-desc' ? -1 : 1;
-	return (a: Task, b: Task) => {
-		if (a?.title == null || b?.title == null) return 0;
-
-		return sortOrder * a.title.localeCompare(b.title);
-	};
-}
-export const userId = writable('');
-
 function createTasks() {
 	const { subscribe, set, update } = writable<Task[]>([]);
 
@@ -146,9 +120,12 @@ function createTasks() {
 				console.error(error);
 			}
 		},
-		sort: (order: TaskSortOption) => {
+		sort: async (order: TaskSortOption) => {
+			let originalTasks: Task[] = [];
 			update((tasks) => {
+				originalTasks = tasks;
 				const newTasks = [...tasks];
+
 				if (order === 'name-asc' || order === 'name-desc') {
 					newTasks.sort(sortByName(order));
 				} else {
@@ -156,6 +133,26 @@ function createTasks() {
 				}
 				return newTasks;
 			});
+			try {
+				const response = await fetch(`/tasks?${order}`, {
+					method: 'GET'
+				});
+
+				const data = await response.json();
+
+				const tasks: Task[] = data.map((item: any) => {
+					return {
+						...item,
+						dueDate: new Date(item.dueDate),
+						createdAt: new Date(item.createdAt),
+						updatedAt: new Date(item.updatedAt)
+					};
+				});
+
+				set(tasks);
+			} catch (error) {
+				set(originalTasks);
+			}
 		},
 		transform: (option: TaskCompletedOrActive) => {
 			update((tasks) => {
@@ -203,10 +200,8 @@ function createTasks() {
 }
 
 export const tasks = createTasks();
-
 export const taskFilterOption = writable<TaskFilterOption>('all');
 export const taskSearch = writable('');
-export const disableAnimation = writable(false);
 
 export const filteredTasks = derived(
 	[tasks, taskFilterOption, taskSearch],

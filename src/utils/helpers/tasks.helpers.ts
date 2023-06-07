@@ -1,5 +1,5 @@
 import type { Task } from '@prisma/client';
-import type { TaskCompletedOrActive } from '@/types/tasks.types';
+import type { TaskCompletedOrActive, TaskSortOption } from '@/types/tasks.types';
 import { isDateOlderThanOneDay } from './date.helpers';
 
 export function checkIsAllCompleted(tasks: Task[]) {
@@ -73,3 +73,65 @@ export function sortByDateUI(order: TaskSortOption) {
 	};
 }
 
+export function getSortOptions(order: TaskSortOption) {
+	let column = 'createdAt';
+	let sort: 'asc' | 'desc' = 'asc';
+
+	switch (order) {
+		case 'created-date-asc':
+			column = 'createdAt';
+			sort = 'asc';
+			break;
+		case 'created-date-desc':
+			column = 'createdAt';
+			sort = 'desc';
+			break;
+		case 'modified-date-asc':
+			column = 'updatedAt';
+			sort = 'asc';
+			break;
+		case 'modified-date-desc':
+			column = 'updatedAt';
+			sort = 'desc';
+			break;
+		case 'due-date-asc':
+			column = 'dueDate';
+			sort = 'asc';
+			break;
+		case 'due-date-desc':
+			column = 'dueDate';
+			sort = 'desc';
+			break;
+
+		case 'name-asc':
+			column = 'title';
+			sort = 'asc';
+			break;
+		case 'name-desc':
+			column = 'title';
+			sort = 'desc';
+			break;
+		default:
+			column = 'createdAt';
+			sort = 'asc';
+			break;
+	}
+
+	return { column, sort };
+}
+
+export function filterTasksBySearch(tasks: Task[], search: string) {
+	if (search === '') return tasks;
+	return tasks.filter((task) =>
+		task.title.trim().toLowerCase().includes(search.toLowerCase().trim())
+	);
+}
+
+export function sortByName(order: TaskSortOption) {
+	const sortOrder = order === 'name-desc' ? -1 : 1;
+	return (a: Task, b: Task) => {
+		if (a?.title == null || b?.title == null) return 0;
+
+		return sortOrder * a.title.localeCompare(b.title);
+	};
+}

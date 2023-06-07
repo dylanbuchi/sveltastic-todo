@@ -1,4 +1,6 @@
 import { prismaClient } from '@/services/prisma';
+import type { TaskSortOption } from '@/types/tasks.types.js';
+import { getSortOptions } from '@/utils/helpers/tasks.helpers.js';
 
 export async function DELETE({ locals, request }) {
 	const session = await locals.auth.validate();
@@ -37,4 +39,28 @@ export async function POST({ locals, request }) {
 	});
 
 	return new Response(JSON.stringify(task), { status: 201 });
+}
+
+export async function GET({ locals, request }) {
+	const session = await locals.auth.validate();
+	if (!session) return new Response(null, { status: 401 });
+
+	const { url } = request;
+	const parts = url.split('?');
+	const sortOption = parts[parts.length - 1] as TaskSortOption;
+
+	const { column, sort } = getSortOptions(sortOption);
+
+	try {
+		const data = await prismaClient.task.findMany({
+			where: { userId: session.userId },
+			orderBy: {
+				[column]: sort
+			}
+		});
+
+		return new Response(JSON.stringify(data), { status: 200 });
+	} catch (error) {
+		console.log(error);
+	}
 }
