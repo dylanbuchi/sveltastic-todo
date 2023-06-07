@@ -41,3 +41,35 @@ export function checkHasExpiredTasks(tasks: Task[]) {
 		}
 	});
 }
+
+export function sortByDateUI(order: TaskSortOption) {
+	let sortOrder = 1;
+
+	if (
+		order === 'created-date-desc' ||
+		order === 'modified-date-desc' ||
+		order === 'due-date-desc'
+	) {
+		sortOrder = -1;
+	}
+
+	let dateProperty: keyof Task = 'createdAt';
+
+	if (order === 'modified-date-asc' || order === 'modified-date-desc') {
+		dateProperty = 'updatedAt';
+	} else if (order === 'due-date-asc' || order === 'due-date-desc') {
+		dateProperty = 'dueDate';
+	}
+
+	return (a: Task, b: Task) => {
+		const dateA = a?.[dateProperty];
+		const dateB = b?.[dateProperty];
+
+		if (dateA instanceof Date && dateB instanceof Date) {
+			return sortOrder * (dateA.getTime() - dateB.getTime());
+		}
+
+		return 0;
+	};
+}
+

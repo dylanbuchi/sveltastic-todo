@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { tasks, taskFilterOption, taskSearch } from '@/store/tasks.store';
 	import type { TaskFilterOption, TaskSortOption } from '@/types/tasks.types';
-	import {
-		taskFilterOptionToName,
-		taskSortOptionToName
-	} from '@/utils/constants/tasks.constants';
+	import { taskFilterOptionToName, taskSortOptionToName } from '@/utils/constants/tasks.constants';
 	import { checkHasExpiredTasks } from '@/utils/helpers/tasks.helpers';
 
-	let sortOption: TaskSortOption = 'date-asc';
+	let sortOption: TaskSortOption = 'created-date-desc';
 
 	let expiredOption: HTMLOptionElement;
 

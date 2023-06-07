@@ -1,5 +1,12 @@
 import { derived, writable } from 'svelte/store';
-import { deleteAllCompleted, deleteAllExpired, setAllTasks } from '../utils/helpers/tasks.helpers';
+import {
+	deleteAllCompleted,
+	deleteAllExpired,
+	filterTasksBySearch,
+	setAllTasks,
+	sortByDateUI,
+	sortByName
+} from '../utils/helpers/tasks.helpers';
 import { isDateOlderThanOneDay } from '../utils/helpers/date.helpers';
 import type { TaskCompletedOrActive, TaskFilterOption, TaskSortOption } from '../types/tasks.types';
 
@@ -145,7 +152,7 @@ function createTasks() {
 				if (order === 'name-asc' || order === 'name-desc') {
 					newTasks.sort(sortByName(order));
 				} else {
-					newTasks.sort(sortByDate(order));
+					newTasks.sort(sortByDateUI(order));
 				}
 				return newTasks;
 			});
