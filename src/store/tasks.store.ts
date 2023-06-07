@@ -4,7 +4,6 @@ import { isDateOlderThanOneDay } from '../utils/helpers/date.helpers';
 import type { TaskCompletedOrActive, TaskFilterOption, TaskSortOption } from '../types/tasks.types';
 
 import type { Task } from '@prisma/client';
-import { nanoid } from 'nanoid';
 
 function sortByDate(order: TaskSortOption) {
 	const sortOrder = order === 'date-desc' ? -1 : 1;
