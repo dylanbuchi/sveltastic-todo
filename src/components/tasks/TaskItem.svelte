@@ -13,7 +13,7 @@
 	let isEditingTask = false;
 	let editedTitle = task.title;
 
-	const expiredTask = (task?.dueDate && isDateOlderThanOneDay(task?.dueDate)) ?? false;
+	$: expiredTask = (task?.dueDate && isDateOlderThanOneDay(task?.dueDate)) ?? false;
 
 	let editedDueDate = task.dueDate?.toISOString().slice(0, 10) ?? new Date().toISOString();
 
