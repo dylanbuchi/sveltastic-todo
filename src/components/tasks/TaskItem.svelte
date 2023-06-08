@@ -27,7 +27,7 @@
 		isEditingTask = false;
 	}
 
-	function handleSaveTaskWrapper() {
+	function handleSaveClick() {
 		tasks.update(task.id, {
 			title: editedTitle,
 			dueDate: new Date(editedDueDate)
@@ -36,10 +36,13 @@
 	}
 
 	function handleKeyDown(event: KeyboardEvent) {
-		if (event.key === 'Enter') {
-			handleSaveTaskWrapper();
-		} else if (event.key === 'Escape') {
-			handleCancelClick();
+		switch (event.key) {
+			case 'Enter':
+				handleSaveClick();
+				break;
+			case 'Escape':
+				handleCancelClick();
+				break;
 		}
 	}
 
@@ -49,9 +52,9 @@
 </script>
 
 <div
-	class="mt-5 box {task.completed && !isEditingTask
-		? 'has-background-grey-lighter'
-		: ''} {expiredTask ? 'expired' : ''}"
+	class="mt-5 box"
+	class:has-background-grey-lighter={task.completed && !isEditingTask}
+	class:expired={expiredTask}
 >
 	<div class="columns is-mobile is-flex is-align-items-center">
 		{#if !isEditingTask}
@@ -59,13 +62,12 @@
 				<div class="column is-narrow is-flex is-align-items-center">
 					<input
 						id={task.id}
-						class="css-checkbox"
 						name="title"
 						type="checkbox"
 						on:change={() => tasks.update(task.id, { completed: !task.completed })}
 						bind:checked={task.completed}
 					/>
-					<label class="checkbox" for={task.id} />
+					<label for={task.id} />
 				</div>
 				<div class="content title is-5" class:checked={task.completed}>
 					<span class:crossed={task.completed}>{task.title}</span>
@@ -92,7 +94,7 @@
 				</div>
 			</div>
 			<TaskIcons
-				action={handleSaveTaskWrapper}
+				action={handleSaveClick}
 				icon={SaveIcon}
 				secondaryAction={handleCancelClick}
 				secondaryIcon={XIcon}
@@ -127,59 +129,27 @@
 		text-decoration: 3px rgb(41, 41, 41) line-through;
 	}
 
-	.css-checkbox {
-		position: absolute;
-		overflow: hidden;
-		clip: rect(0 0 0 0);
-		height: 1px;
-		width: 1px;
-		margin: -1px;
-		padding: 0;
-		border: 0;
-	}
-
-	.css-checkbox + label {
-		position: relative;
-		font-size: 16px;
+	input[type='checkbox'] {
 		cursor: pointer;
-		display: inline-flex;
-		align-items: center;
-		height: 36px;
-		color: rgb(0, 0, 0);
-	}
-
-	.css-checkbox + label::before {
-		content: ' ';
-		display: inline-block;
-		vertical-align: middle;
-		margin-right: 3px;
+		appearance: none;
 		width: 30px;
 		height: 30px;
-		background-color: white;
 		border-width: 3px;
 		border-style: solid;
 		border-radius: 8px;
 		box-shadow: none;
+		vertical-align: middle;
+		margin-right: 3px;
+		background-color: white;
 	}
-	.css-checkbox:checked + label::after {
-		content: '';
+
+	input[type='checkbox']:checked {
 		background-image: url('https://www.drupal.org/files/project-images/Very-Basic-Checked-checkbox-icon.png');
 		background-repeat: no-repeat;
 		background-size: 20px 20px;
 		background-position: center center;
-		position: absolute;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		margin-left: 0px;
-		left: -3px;
-		top: 0px;
-		text-align: center;
-		background-color: transparent;
-		font-size: 10px;
-		height: 36px;
-		width: 36px;
 	}
+
 	.expired {
 		border: 2px solid rgb(147, 12, 12);
 		background-color: rgb(239, 214, 214);
