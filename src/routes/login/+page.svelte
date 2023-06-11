@@ -3,6 +3,7 @@
 
 	$: errorMessage = '';
 	$: isGuest = false;
+	$: isLoading = false;
 </script>
 
 <div class="container py-4">
@@ -10,11 +11,13 @@
 	<form
 		method="POST"
 		use:enhance={({ action }) => {
+			if (isLoading) return;
+			isLoading = true;
 			isGuest && (action.href = action.href + '?guest');
 
 			return async ({ result, update }) => {
-				if (result.type === 'success') {
-				} else if (result.type === 'failure') {
+				if (result.type === 'failure') {
+					isLoading = false;
 					const error = result?.data?.error ?? 'Something went wrong';
 
 					if (error === 'AUTH_INVALID_KEY_ID') {
@@ -46,15 +49,16 @@
 		</div>
 		<div class="field is-flex is-align-items-center is-justify-content-space-between">
 			<div class="control">
-				<input class="button is-primary" type="submit" value="Login" />
+				<input disabled={isLoading} class="button is-primary" type="submit" value="Log in" />
 			</div>
 			<div>or</div>
 			<div class="control">
 				<input
+					disabled={isLoading}
 					on:click={() => (isGuest = true)}
 					class="button is-link"
 					type="submit"
-					value="Login as Guest"
+					value="Log in as Guest"
 				/>
 			</div>
 		</div>

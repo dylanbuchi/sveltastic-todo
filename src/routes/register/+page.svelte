@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	$: errorMessage = '';
+	$: isLoading = false;
 </script>
 
 <div class="container py-4">
@@ -8,9 +9,12 @@
 	<form
 		method="POST"
 		use:enhance={() => {
+			if (isLoading) return;
+			isLoading = true;
+
 			return async ({ result, update }) => {
-				if (result.type === 'success') {
-				} else if (result.type === 'failure') {
+				if (result.type === 'failure') {
+					isLoading = false;
 					const error = result?.data?.error ?? 'Something went wrong';
 
 					if (error === 'AUTH_INVALID_KEY_ID') {
@@ -48,7 +52,7 @@
 		</div>
 		<div class="field">
 			<div class="control">
-				<input class="button is-primary" type="submit" value="Register" />
+				<input disabled={isLoading} class="button is-primary" type="submit" value="Register" />
 			</div>
 		</div>
 	</form>

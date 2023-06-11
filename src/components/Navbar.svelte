@@ -4,6 +4,7 @@
 	import type { User } from 'lucia-auth';
 
 	export let user: User | undefined;
+	let isLoading = false;
 </script>
 
 <nav class="navbar is-flex is-justify-content-space-between" aria-label="main navigation">
@@ -16,8 +17,24 @@
 	<div class="navbar-item">
 		<div class="buttons">
 			{#if user}
-				<form use:enhance method="post" action="?/logout">
-					<input class="button is-light is-hoverable" type="submit" value="Sign out" />
+				<form
+					use:enhance={() => {
+						if (isLoading) return;
+						isLoading = true;
+						return async ({ update }) => {
+							update();
+							isLoading = false;
+						};
+					}}
+					method="POST"
+					action="?/logout"
+				>
+					<input
+						disabled={isLoading}
+						class="button is-light is-hoverable"
+						type="submit"
+						value="Log out"
+					/>
 				</form>
 			{:else}
 				<a href="/login" class="button is-light is-hoverable"> Log in </a>
