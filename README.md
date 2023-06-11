@@ -10,7 +10,7 @@ A full-stack task management web app built with SvelteKit, TypeScript and Bulma 
 
 ---
 
-![Screenshot (61)](https://github.com/dylanbuchi/sveltastic-todo/assets/52018183/a753c11e-e57a-4e2d-a41a-0c6be43ae2c1)
+![Screenshot (61)](https://github.com/dylanbuchi/sveltastic-todo/assets/52018183/1e27dc3c-2275-4402-9ce9-4c46a6ea41d8)
 
 ---
 
