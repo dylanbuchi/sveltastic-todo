@@ -2,8 +2,12 @@ import { fail, redirect } from '@sveltejs/kit';
 import { auth } from '@/server/lucia';
 import { z } from 'zod';
 import type { PageServerLoad, Actions } from './$types';
-import { LuciaError } from 'lucia-auth';
+import { LuciaError, generateRandomString } from 'lucia-auth';
 import { loginSchema, type LoginFormData } from '@/utils/validators/auth.validators';
+import { GUEST_BASE_EMAIL, GUEST_PASSWORD } from '$env/static/private';
+import { prismaClient } from '@/services/prisma';
+import { guestTaskTitles } from '@/utils/constants/tasks.constants';
+import { getRandomNumber } from '@/utils/helpers/numbers.helpers';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const { session } = await locals.auth.validateUser();
@@ -13,10 +17,27 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		const form = await request.formData();
-		const email = form.get('email');
-		const password = form.get('password');
+
+		const isGuest = request.url.includes('guest');
+
+		const email = isGuest ? `${generateRandomString(12)}${GUEST_BASE_EMAIL}` : form.get('email');
+
+		const password = isGuest ? GUEST_PASSWORD : form.get('password');
 
 		if (typeof email !== 'string' || typeof password !== 'string') return fail(400);
+
+		if (isGuest) {
+			await auth.createUser({
+				primaryKey: {
+					providerId: 'email',
+					providerUserId: email,
+					password
+				},
+				attributes: {
+					email
+				}
+			});
+		}
 
 		try {
 			const loginData: LoginFormData = { email };
@@ -24,6 +45,24 @@ export const actions: Actions = {
 
 			const key = await auth.useKey('email', email, password);
 			const session = await auth.createSession(key.userId);
+
+			if (isGuest) {
+				const tasks = guestTaskTitles.map((title, index) => {
+					const dueDate = new Date();
+					dueDate.setDate(dueDate.getDate() + getRandomNumber(1, 10));
+
+					return {
+						title,
+						dueDate,
+						completed: index % 2 === 1,
+						userId: session.userId
+					};
+				});
+
+				await prismaClient.task.createMany({
+					data: tasks
+				});
+			}
 			locals.auth.setSession(session);
 		} catch (error) {
 			if (error instanceof z.ZodError) {

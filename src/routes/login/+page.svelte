@@ -2,13 +2,16 @@
 	import { enhance } from '$app/forms';
 
 	$: errorMessage = '';
+	$: isGuest = false;
 </script>
 
 <div class="container py-4">
 	<h1 class="title is-4">Log in to your account</h1>
 	<form
 		method="POST"
-		use:enhance={() => {
+		use:enhance={({ action }) => {
+			isGuest && (action.href = action.href + '?guest');
+
 			return async ({ result, update }) => {
 				if (result.type === 'success') {
 				} else if (result.type === 'failure') {
@@ -41,9 +44,18 @@
 				<input class="input" type="password" id="password" name="password" />
 			</div>
 		</div>
-		<div class="field">
+		<div class="field is-flex is-align-items-center is-justify-content-space-between">
 			<div class="control">
 				<input class="button is-primary" type="submit" value="Login" />
+			</div>
+			<div>or</div>
+			<div class="control">
+				<input
+					on:click={() => (isGuest = true)}
+					class="button is-link"
+					type="submit"
+					value="Login as Guest"
+				/>
 			</div>
 		</div>
 	</form>

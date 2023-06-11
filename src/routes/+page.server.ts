@@ -1,5 +1,6 @@
 import { redirect, type Actions, fail } from '@sveltejs/kit';
 import { auth } from '@/server/lucia';
+import { GUEST_BASE_EMAIL } from '$env/static/private';
 
 export const load = async ({ locals }) => {
 	const { user } = await locals.auth.validateUser();
@@ -12,9 +13,22 @@ export const load = async ({ locals }) => {
 
 export const actions: Actions = {
 	logout: async ({ locals }) => {
-		const session = await locals.auth.validate();
-		if (!session) return fail(401);
-		await auth.invalidateSession(session.sessionId);
-		locals.auth.setSession(null);
+		try {
+			const session = await locals.auth.validate();
+			if (!session) return fail(401);
+
+			const { user } = await locals.auth.validateUser();
+
+			const isGuest = user?.email && user?.email?.includes(GUEST_BASE_EMAIL);
+
+			await auth.invalidateSession(session.sessionId);
+			locals.auth.setSession(null);
+
+			if (isGuest) {
+				await auth.deleteUser(user.userId);
+			}
+		} catch (error) {
+			console.error(error);
+		}
 	}
 };
