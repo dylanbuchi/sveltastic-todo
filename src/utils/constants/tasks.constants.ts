@@ -7,8 +7,8 @@ export const taskSortOptionToName: Record<TaskSortOption, string> = {
 	'modified-date-desc': 'Modified (Newest)',
 	'modified-date-asc': 'Modified (Oldest)',
 
-	'due-date-desc': 'Due (Soon)',
-	'due-date-asc': 'Due (Later)',
+	'due-date-desc': 'Due (Later)',
+	'due-date-asc': 'Due (Soon)',
 
 	'name-asc': 'Name (A-Z)',
 	'name-desc': 'Name (Z-A)'
