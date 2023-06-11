@@ -1,10 +1,25 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Spinner from '@/components/Spinner.svelte';
 	$: errorMessage = '';
 	$: isLoading = false;
+
+	let name = '';
+	let email = '';
+	let password = '';
+
+	$: {
+		if (name || email || password) {
+			errorMessage = '';
+		}
+	}
 </script>
 
-<div class="container py-4">
+{#if isLoading}
+	<Spinner />
+{/if}
+
+<div class="card container px-6 py-3 my-3">
 	<h1 class="title is-4">Create an account</h1>
 	<form
 		method="POST"
@@ -35,24 +50,29 @@
 		<div class="field">
 			<label class="label" for="name">Name</label>
 			<div class="control">
-				<input class="input" type="text" id="name" name="name" />
+				<input bind:value={name} class="input" type="text" id="name" name="name" />
 			</div>
 		</div>
 		<div class="field">
 			<label class="label" for="email">Email</label>
 			<div class="control">
-				<input class="input" type="email" id="email" name="email" />
+				<input bind:value={email} class="input" type="email" id="email" name="email" />
 			</div>
 		</div>
 		<div class="field">
 			<label class="label" for="password">Password</label>
 			<div class="control">
-				<input class="input" type="password" id="password" name="password" />
+				<input bind:value={password} class="input" type="password" id="password" name="password" />
 			</div>
 		</div>
 		<div class="field">
 			<div class="control">
-				<input disabled={isLoading} class="button is-primary" type="submit" value="Register" />
+				<input
+					disabled={isLoading || !name || !email || !password}
+					class="button is-dark"
+					type="submit"
+					value="Register"
+				/>
 			</div>
 		</div>
 	</form>

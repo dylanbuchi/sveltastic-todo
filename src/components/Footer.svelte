@@ -9,3 +9,9 @@
 		<p>{APP_NAME} &copy; {currentYear} All rights reserved.</p>
 	</div>
 </footer>
+
+<style>
+	footer {
+		background-color: rgb(234, 231, 228);
+	}
+</style>

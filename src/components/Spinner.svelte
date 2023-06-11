@@ -9,7 +9,7 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-color: rgba(255, 255, 255, 0);
+		background-color: rgb(248, 245, 242);
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -17,9 +17,9 @@
 	}
 
 	.loader {
-		border: 20px solid #eaf0f6;
+		border: 20px solid rgb(217, 217, 217);
 		border-radius: 50%;
-		border-top: 20px solid #66d7b3;
+		border-top: 20px solid #1f1f1f;
 		width: 120px;
 		height: 120px;
 		animation: spinner 1.5s linear infinite;

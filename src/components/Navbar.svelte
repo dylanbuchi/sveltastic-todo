@@ -2,10 +2,15 @@
 	import { enhance } from '$app/forms';
 	import { APP_NAME } from '@/utils/constants/app.constants';
 	import type { User } from 'lucia-auth';
+	import Spinner from './Spinner.svelte';
 
 	export let user: User | undefined;
 	let isLoading = false;
 </script>
+
+{#if isLoading}
+	<Spinner />
+{/if}
 
 <nav class="navbar is-flex is-justify-content-space-between" aria-label="main navigation">
 	<div class="navbar-brand navbar-start">
@@ -31,14 +36,14 @@
 				>
 					<input
 						disabled={isLoading}
-						class="button is-light is-hoverable"
+						class="button is-dark is-hoverable"
 						type="submit"
 						value="Log out"
 					/>
 				</form>
 			{:else}
-				<a href="/login" class="button is-light is-hoverable"> Log in </a>
-				<a href="/register" class="button is-primary is-hoverable">
+				<a href="/login" class="button is-dark is-hoverable"> Log in </a>
+				<a href="/register" class="button is-link is-hoverable register">
 					<strong>Sign up</strong>
 				</a>
 			{/if}
@@ -49,5 +54,6 @@
 <style>
 	nav {
 		border-bottom: 1px rgba(91, 91, 91, 0.345) solid;
+		background-color: rgb(255, 255, 255);
 	}
 </style>

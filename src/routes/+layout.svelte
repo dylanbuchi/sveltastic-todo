@@ -19,6 +19,7 @@
 <style>
 	main {
 		min-height: 100vh;
+		background-color: rgb(248, 245, 242);
 	}
 
 	.container {

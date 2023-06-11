@@ -5,22 +5,33 @@
 	$: errorMessage = '';
 	$: isGuest = false;
 	$: isLoading = false;
+
+	let email = '';
+	let password = '';
+
+	$: {
+		if (email || password) {
+			errorMessage = '';
+		}
+	}
 </script>
 
-<div class="container py-4">
+<div class="card container p-6 my-3">
 	<h1 class="title is-4">Log in to your account</h1>
 	{#if errorMessage}
 		<div class="notification is-danger has-text-centered p-4">{errorMessage}</div>
 	{/if}
 
-	{#if isLoading}
+	{#if !errorMessage && isLoading}
 		<Spinner />
 	{:else}
 		<form
 			method="POST"
 			use:enhance={({ action }) => {
 				if (isLoading) return;
+
 				isLoading = true;
+
 				isGuest && (action.href = action.href + '?guest');
 
 				return async ({ result, update }) => {
@@ -43,18 +54,29 @@
 			<div class="field">
 				<label class="label" for="email">Email</label>
 				<div class="control">
-					<input class="input" type="email" id="email" name="email" />
+					<input bind:value={email} class="input" type="email" id="email" name="email" />
 				</div>
 			</div>
 			<div class="field">
 				<label class="label" for="password">Password</label>
 				<div class="control">
-					<input class="input" type="password" id="password" name="password" />
+					<input
+						bind:value={password}
+						class="input"
+						type="password"
+						id="password"
+						name="password"
+					/>
 				</div>
 			</div>
 			<div class="field is-flex is-align-items-center is-justify-content-space-between">
 				<div class="control">
-					<input disabled={isLoading} class="button is-primary" type="submit" value="Log in" />
+					<input
+						disabled={isLoading || !email || !password}
+						class="button is-dark"
+						type="submit"
+						value="Log in"
+					/>
 				</div>
 				<div>or</div>
 				<div class="control">
