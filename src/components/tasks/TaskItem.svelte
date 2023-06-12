@@ -57,7 +57,8 @@
 	class:dark={$isDarkMode}
 	class:has-background-black-ter={$isDarkMode && task.completed && !isEditingTask}
 	class:has-background-grey-lighter={!$isDarkMode && task.completed && !isEditingTask}
-	class:expired={expiredTask}
+	class:expired={expiredTask && !task.completed}
+	class:expired-dark={expiredTask && $isDarkMode && !task.completed}
 >
 	<div class="has-bac columns is-mobile is-flex is-align-items-center">
 		{#if !isEditingTask}
@@ -179,5 +180,10 @@
 	.expired {
 		border: 2px solid rgb(147, 12, 12);
 		background-color: rgb(239, 214, 214);
+	}
+
+	.expired-dark {
+		border: 2px solid rgb(206, 6, 6);
+		background-color: rgb(61, 47, 47);
 	}
 </style>
