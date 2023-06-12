@@ -7,6 +7,7 @@
 	import { tasks } from '@/store/tasks.store';
 	import TaskIcons from './TaskIcons.svelte';
 	import type { Task } from '@prisma/client';
+	import { isDarkMode } from '@/store/theme.store';
 
 	export let task: Task;
 
@@ -53,10 +54,12 @@
 
 <div
 	class="mt-5 box"
-	class:has-background-grey-lighter={task.completed && !isEditingTask}
+	class:dark={$isDarkMode}
+	class:has-background-black-ter={$isDarkMode && task.completed && !isEditingTask}
+	class:has-background-grey-lighter={!$isDarkMode && task.completed && !isEditingTask}
 	class:expired={expiredTask}
 >
-	<div class="columns is-mobile is-flex is-align-items-center">
+	<div class="has-bac columns is-mobile is-flex is-align-items-center">
 		{#if !isEditingTask}
 			<div class="column is-flex is-align-items-center">
 				<div class="column is-narrow is-flex is-align-items-center">
@@ -69,8 +72,17 @@
 					/>
 					<label for={task.id} />
 				</div>
-				<div class="content title is-5" class:checked={task.completed}>
-					<span class:crossed={task.completed}>{task.title}</span>
+				<div
+					class="content title is-5"
+					class:checked-dark={$isDarkMode && task.completed}
+					class:checked={!$isDarkMode && task.completed}
+				>
+					<span
+						class:text-dark={$isDarkMode}
+						class:crossed={!$isDarkMode && task.completed}
+						class:crossed-dark={$isDarkMode && task.completed}
+						>{task.title}
+					</span>
 				</div>
 			</div>
 			<TaskIcons
@@ -84,6 +96,7 @@
 				<div class="field">
 					<div class="control">
 						<input
+							class:input-dark={$isDarkMode}
 							class="input"
 							type="text"
 							bind:this={editInput}
@@ -105,6 +118,7 @@
 		{#if isEditingTask && task.dueDate}
 			<div class="control">
 				<input
+					class:input-dark={$isDarkMode}
 					class="input session-date"
 					type="date"
 					min={formatDateISO(new Date())}
@@ -113,7 +127,10 @@
 				/>
 			</div>
 		{:else}
-			<span class="has-text-grey" class:crossed={task.completed}
+			<span
+				class:text-dark={$isDarkMode}
+				class:crossed={!$isDarkMode && task.completed}
+				class:crossed-dark={$isDarkMode && task.completed}
 				>Due: {task?.dueDate && formatDate(task.dueDate)}</span
 			>
 		{/if}
@@ -125,8 +142,17 @@
 		color: gray;
 	}
 
+	.checked-dark {
+		color: rgb(24, 24, 24);
+	}
+
 	.crossed {
 		text-decoration: 3px rgb(41, 41, 41) line-through;
+	}
+
+	.crossed-dark {
+		text-decoration: 3px rgb(170, 169, 169) line-through;
+		color: gray;
 	}
 
 	input[type='checkbox'] {

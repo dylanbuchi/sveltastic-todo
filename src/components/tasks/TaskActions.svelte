@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { deleteTasksModal } from '@/store/modals.store';
 	import { tasks } from '@/store/tasks.store';
+
 	import {
 		checkHasExpiredTasks,
 		checkIsAllCompleted,
 		checkSomeAreCompleted
 	} from '@/utils/helpers/tasks.helpers';
 	import DeleteTasksModal from '../modals/DeleteTasksModal.svelte';
+	import { isDarkMode } from '@/store/theme.store';
 
 	let option: 'active' | 'completed';
 
@@ -33,8 +35,8 @@
 	}
 </script>
 
-<section class="box p-5 is-flex is-flex-direction-column">
-	<h2 class="title is-5 has-text-centered">Manage Tasks</h2>
+<section class:card-dark={$isDarkMode} class="box p-5 is-flex is-flex-direction-column">
+	<h2 class:text-dark={$isDarkMode} class="title is-5 has-text-centered">Manage Tasks</h2>
 	<button on:click={deleteTasksModal.openModal} class="mt-2 button is-fullwidth is-danger">
 		Delete All</button
 	>

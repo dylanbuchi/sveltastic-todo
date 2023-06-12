@@ -1,15 +1,23 @@
-<div class="loader-overlay">
+<script lang="ts">
+	import { isDarkMode } from '@/store/theme.store';
+</script>
+
+<div class:card-dark={$isDarkMode} class:bg={!$isDarkMode} class="loader-overlay">
 	<div class="loader" />
 </div>
 
 <style>
+	.bg {
+		background-color: rgb(248, 245, 242);
+	}
+
 	.loader-overlay {
 		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-color: rgb(248, 245, 242);
+
 		display: flex;
 		justify-content: center;
 		align-items: center;

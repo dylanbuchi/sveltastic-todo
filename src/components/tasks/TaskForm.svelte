@@ -3,6 +3,7 @@
 	import { formatDateISO } from '@/utils/helpers/date.helpers';
 	import { tasks } from '@/store/tasks.store';
 	import { scrollWindowToTop } from '@/utils/helpers/dom.helpers';
+	import { isDarkMode } from '@/store/theme.store';
 
 	export let handleScrollTop: () => void;
 
@@ -39,6 +40,7 @@
 	<div class="field has-addons">
 		<div class="control is-expanded">
 			<input
+				class:input-dark={$isDarkMode}
 				class="input"
 				type="text"
 				placeholder="Enter task"
@@ -48,6 +50,7 @@
 		</div>
 		<div class="control">
 			<input
+				class:input-dark={$isDarkMode}
 				class="input session-date"
 				min={formatDateISO(new Date())}
 				type="date"

@@ -2,7 +2,9 @@
 	import { enhance } from '$app/forms';
 	import { APP_NAME } from '@/utils/constants/app.constants';
 	import type { User } from 'lucia-auth';
+	import { isDarkMode } from '@/store/theme.store';
 	import Spinner from './Spinner.svelte';
+	import 'iconify-icon';
 
 	export let user: User | undefined;
 	let isLoading = false;
@@ -12,15 +14,33 @@
 	<Spinner />
 {/if}
 
-<nav class="navbar is-flex is-justify-content-space-between" aria-label="main navigation">
+<nav
+	class:navbar-dark={$isDarkMode}
+	class:bg={!$isDarkMode}
+	class="navbar is-flex is-justify-content-space-between"
+	aria-label="main navigation"
+>
 	<div class="navbar-brand navbar-start">
 		<div class="navbar-item">
-			<h1 class="title is-4">{APP_NAME}</h1>
+			<h1 class:text-dark={$isDarkMode} class="title is-4">{APP_NAME}</h1>
 		</div>
 	</div>
 
 	<div class="navbar-item">
 		<div class="buttons">
+			<button
+				class="button is-hoverable"
+				class:text-dark={$isDarkMode}
+				class:is-dark={$isDarkMode}
+				on:click={() => isDarkMode.toggle()}
+			>
+				{#if $isDarkMode}
+					<iconify-icon icon="ph:sun-bold" />
+				{:else}
+					<iconify-icon icon="ph:moon-bold" />
+				{/if}
+			</button>
+
 			{#if user}
 				<form
 					use:enhance={() => {
@@ -52,7 +72,7 @@
 </nav>
 
 <style>
-	nav {
+	.bg {
 		border-bottom: 1px rgba(91, 91, 91, 0.345) solid;
 		background-color: rgb(255, 255, 255);
 	}

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Spinner from '@/components/Spinner.svelte';
+	import { isDarkMode } from '@/store/theme.store';
 
 	$: errorMessage = '';
 	$: isGuest = false;
@@ -16,8 +17,8 @@
 	}
 </script>
 
-<div class="card container p-6 my-3">
-	<h1 class="title is-4">Log in to your account</h1>
+<div class:text-dark={$isDarkMode} class:card-dark={$isDarkMode} class="card container p-6 my-3">
+	<h1 class:text-dark={$isDarkMode} class="title is-4">Log in to your account</h1>
 	{#if errorMessage}
 		<div class="notification is-danger has-text-centered p-4">{errorMessage}</div>
 	{/if}
@@ -52,15 +53,23 @@
 			}}
 		>
 			<div class="field">
-				<label class="label" for="email">Email</label>
+				<label class:text-dark={$isDarkMode} class="label" for="email">Email</label>
 				<div class="control">
-					<input bind:value={email} class="input" type="email" id="email" name="email" />
+					<input
+						class:input-dark={$isDarkMode}
+						bind:value={email}
+						class="input"
+						type="email"
+						id="email"
+						name="email"
+					/>
 				</div>
 			</div>
 			<div class="field">
-				<label class="label" for="password">Password</label>
+				<label class:text-dark={$isDarkMode} class="label" for="password">Password</label>
 				<div class="control">
 					<input
+						class:input-dark={$isDarkMode}
 						bind:value={password}
 						class="input"
 						type="password"
@@ -92,3 +101,6 @@
 		</form>
 	{/if}
 </div>
+
+<style>
+</style>

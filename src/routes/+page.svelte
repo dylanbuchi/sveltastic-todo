@@ -9,6 +9,7 @@
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import type { Task } from '@prisma/client';
+	import { isDarkMode } from '@/store/theme.store';
 
 	let taskListDiv: HTMLDivElement;
 
@@ -38,19 +39,20 @@
 			</div>
 		{/if}
 		<div class="column">
-			<div class={$tasks.length ? 'card' : undefined}>
+			<div class:card-dark={$isDarkMode} class={$tasks.length ? 'card' : undefined}>
 				<div class="p-5">
 					<TaskForm {handleScrollTop} />
 				</div>
 				{#if $tasks.length}
 					<div
+						class:card-dark={$isDarkMode}
 						bind:this={taskListDiv}
 						on:keydown={() => scrollWindowToTop()}
 						on:click={() => scrollWindowToTop()}
 						class="card-content"
 						style="max-height: 65vh; overflow-y: scroll;"
 					>
-						<h2 class="title is-4">Tasks</h2>
+						<h2 class:text-dark={$isDarkMode} class="title is-4">Tasks</h2>
 						<TaskList />
 						{#if !$filteredTasks.length && $taskSearch}
 							<h3 class="has-text-centered">No Tasks found</h3>

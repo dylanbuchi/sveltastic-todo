@@ -2,11 +2,54 @@
 
 :root {
 	--navbar-height: auto;
+
+	--darker: rgb(27, 27, 27);
+	--dark: rgb(49, 49, 49);
+
+	--light: rgb(232, 232, 232);
+
+	--card-dark: rgb(82, 82, 82);
+	--input-dark: rgb(39, 39, 39);
+
+	--navbar-dark: rgb(62, 62, 62);
 }
 
 input.session-date {
 	position: relative;
 	overflow: hidden;
+}
+
+.navbar-dark {
+	background-color: var(--navbar-dark);
+}
+
+.text-dark {
+	color: var(--light);
+}
+
+.card-dark {
+	background-color: var(--card-dark);
+	color: var(--light);
+}
+
+.input-dark {
+	background-color: var(--input-dark);
+	color: var(--light);
+}
+
+.input-dark::placeholder {
+	background-color: var(--input-dark);
+	color: var(--light);
+}
+
+.darker {
+	background-color: var(--darker);
+	color: var(--light);
+}
+
+.dark {
+	background-color: var(--dark);
+	color: var(--light);
 }
 
 input.session-date::-webkit-calendar-picker-indicator {
