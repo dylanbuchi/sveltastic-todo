@@ -13,6 +13,6 @@
 
 <style>
 	.bg {
-		background-color: rgb(234, 231, 228);
+		background-color: rgb(236, 230, 224);
 	}
 </style>
