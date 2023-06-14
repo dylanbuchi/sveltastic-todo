@@ -1,6 +1,31 @@
 import type { Task } from '@prisma/client';
 import type { TaskCompletedOrActive, TaskSortOption } from '@/types/tasks.types';
-import { isDateOlderThanOneDay } from './date.helpers';
+
+import { formatDateISO, isDateOlderThanOneDay } from './date.helpers';
+
+export function exportTasksAsJSON(tasks: Task[]) {
+	const tasksToExport = tasks.map(({ title, completed, dueDate, createdAt, updatedAt }) => {
+		return {
+			title,
+			completed,
+			dueDate: dueDate && formatDateISO(dueDate),
+			createdAt: createdAt && formatDateISO(createdAt),
+			updatedAt: updatedAt && formatDateISO(updatedAt)
+		};
+	});
+
+	const data = JSON.stringify(tasksToExport);
+	const blob = new Blob([data], { type: 'application/json' });
+
+	const url = window?.URL.createObjectURL(blob);
+	const aElement = document.createElement('a');
+
+	aElement.href = url;
+	aElement.download = 'my-tasks.json';
+	aElement.click();
+
+	window.URL.revokeObjectURL(url);
+}
 
 export function checkIsAllCompleted(tasks: Task[]) {
 	return tasks?.length > 0 && tasks.every((task) => task.completed);

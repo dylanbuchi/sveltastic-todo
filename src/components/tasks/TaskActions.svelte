@@ -5,7 +5,8 @@
 	import {
 		checkHasExpiredTasks,
 		checkIsAllCompleted,
-		checkSomeAreCompleted
+		checkSomeAreCompleted,
+		exportTasksAsJSON
 	} from '@/utils/helpers/tasks.helpers';
 	import DeleteTasksModal from '../modals/DeleteTasksModal.svelte';
 	import { isDarkMode } from '@/store/theme.store';
@@ -59,4 +60,7 @@
 		>
 	{/if}
 	<DeleteTasksModal {deleteAllCompletedButtonIsClicked} {handleCancel} {handleConfirm} />
+	<button class="mt-2 button is-fullwidth is-link" on:click={() => exportTasksAsJSON($tasks)}
+		>Download tasks</button
+	>
 </section>
