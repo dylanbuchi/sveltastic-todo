@@ -11,6 +11,7 @@ import { isDateOlderThanOneDay } from '../utils/helpers/date.helpers';
 import type { TaskCompletedOrActive, TaskFilterOption, TaskSortOption } from '../types/tasks.types';
 
 import type { Task } from '@prisma/client';
+import { generateRandomString } from 'lucia-auth';
 
 function createTasks() {
 	const { subscribe, set, update } = writable<Task[]>([]);
@@ -19,7 +20,23 @@ function createTasks() {
 		set,
 		subscribe,
 		add: async (title: string, dueDate: Date) => {
+			let originalTasks: Task[] = [];
+			let task: Task = {
+				id: generateRandomString(6),
+				userId: null,
+				title,
+				dueDate,
+				updatedAt: new Date(),
+				createdAt: new Date(),
+				completed: false
+			};
 			try {
+				update((tasks) => {
+					originalTasks = tasks;
+					const newTasks = [task, ...tasks];
+					return newTasks;
+				});
+
 				const response = await fetch('/tasks', {
 					method: 'POST',
 					body: JSON.stringify({ title, dueDate })
@@ -30,7 +47,7 @@ function createTasks() {
 				}
 
 				const data = await response.json();
-				const task: Task = {
+				task = {
 					...data,
 					dueDate: new Date(data.dueDate),
 					createdAt: new Date(data.createdAt),
@@ -43,6 +60,7 @@ function createTasks() {
 					return newTasks;
 				});
 			} catch (error) {
+				set(originalTasks);
 				console.error(error);
 			}
 		},
