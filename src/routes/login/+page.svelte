@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Spinner from '@/components/Spinner.svelte';
+	import { loginAsGuestClicked } from '@/store/app.store';
 	import { isDarkMode } from '@/store/theme.store';
 
 	$: errorMessage = '';
-	$: isGuest = false;
+
 	$: isLoading = false;
 
 	let email = '';
@@ -33,7 +34,7 @@
 
 				isLoading = true;
 
-				isGuest && (action.href = action.href + '?guest');
+				$loginAsGuestClicked && (action.href = action.href + '?guest');
 
 				return async ({ result, update }) => {
 					if (result.type === 'failure') {
@@ -91,7 +92,7 @@
 				<div class="control">
 					<input
 						disabled={isLoading}
-						on:click={() => (isGuest = true)}
+						on:click={() => ($loginAsGuestClicked = true)}
 						class="button is-link"
 						type="submit"
 						value="Log in as Guest"
