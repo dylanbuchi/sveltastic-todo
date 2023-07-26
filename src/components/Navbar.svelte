@@ -5,9 +5,12 @@
 	import { isDarkMode } from '@/store/theme.store';
 	import Spinner from './Spinner.svelte';
 	import 'iconify-icon';
+	import { page } from '$app/stores';
 
 	export let user: User | undefined;
 	let isLoading = false;
+
+	$: currentRoute = $page.url.pathname;
 </script>
 
 {#if isLoading}
@@ -61,11 +64,12 @@
 						value="Log out"
 					/>
 				</form>
-			{:else}
-				<a href="/login" class="button is-dark is-hoverable"> Log in </a>
+			{:else if currentRoute === '/login'}
 				<a href="/register" class="button is-link is-hoverable register">
 					<strong>Sign up</strong>
 				</a>
+			{:else}
+				<a href="/login" class="button is-link is-hoverable"><strong>Log in</strong></a>
 			{/if}
 		</div>
 	</div>
