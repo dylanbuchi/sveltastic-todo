@@ -2,6 +2,8 @@ import { prismaClient } from '@/services/prisma';
 
 export async function PATCH({ locals, request, params }) {
 	const session = await locals.auth.validate();
+	console.log(session);
+
 	if (!session) return new Response(null, { status: 401 });
 
 	const body = await request.json();
@@ -10,7 +12,7 @@ export async function PATCH({ locals, request, params }) {
 	if (!body || !taskId) return new Response(null, { status: 400 });
 
 	const currentTask = await prismaClient.task.findUnique({ where: { id: taskId } });
-	if (!currentTask || currentTask.userId !== session.userId)
+	if (!currentTask || currentTask.userId !== session.user.userId)
 		return new Response(null, { status: 404 });
 
 	await prismaClient.task.update({
@@ -32,7 +34,7 @@ export async function DELETE({ locals, params }) {
 	if (!taskId) return new Response(null, { status: 400 });
 
 	const currentTask = await prismaClient.task.findUnique({ where: { id: taskId } });
-	if (!currentTask || currentTask.userId !== session.userId)
+	if (!currentTask || currentTask.userId !== session.user.userId)
 		return new Response(null, { status: 404 });
 
 	await prismaClient.task.delete({

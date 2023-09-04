@@ -2,7 +2,9 @@ import { fail, redirect } from '@sveltejs/kit';
 import { auth } from '@/server/lucia';
 import { z } from 'zod';
 import type { PageServerLoad, Actions } from './$types';
-import { LuciaError, generateRandomString } from 'lucia-auth';
+import { LuciaError } from 'lucia';
+import { generateRandomString } from 'lucia/utils';
+
 import { loginSchema, type LoginFormData } from '@/utils/validators/auth.validators';
 import { GUEST_BASE_EMAIL, GUEST_PASSWORD } from '$env/static/private';
 import { prismaClient } from '@/services/prisma';
@@ -10,7 +12,7 @@ import { guestTaskTitles } from '@/utils/constants/tasks.constants';
 import { getRandomNumber } from '@/utils/helpers/numbers.helpers';
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const { session } = await locals.auth.validateUser();
+	const session = await locals.auth.validate();
 	if (session) throw redirect(302, '/');
 };
 
@@ -28,7 +30,7 @@ export const actions: Actions = {
 
 		if (isGuest) {
 			await auth.createUser({
-				primaryKey: {
+				key: {
 					providerId: 'email',
 					providerUserId: email,
 					password
@@ -44,7 +46,10 @@ export const actions: Actions = {
 			loginSchema.parse(loginData);
 
 			const key = await auth.useKey('email', email, password);
-			const session = await auth.createSession(key.userId);
+			const session = await auth.createSession({
+				userId: key.userId,
+				attributes: {}
+			});
 
 			if (isGuest) {
 				const tasks = guestTaskTitles.map((title, index) => {
@@ -55,7 +60,7 @@ export const actions: Actions = {
 						title,
 						dueDate,
 						completed: index % 2 === 1,
-						userId: session.userId
+						userId: session.user.userId
 					};
 				});
 

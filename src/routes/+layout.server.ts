@@ -1,16 +1,17 @@
 import { prismaClient } from '@/services/prisma.js';
 
 export const load = async ({ locals }) => {
-	const { user } = await locals.auth.validateUser();
+	const session = await locals.auth.validate();
 
-	if (user) {
+	if (session?.user) {
 		const data = await prismaClient.task.findMany({
-			where: { userId: user.userId }
+			where: { userId: session.user.userId }
 		});
 
 		const tasks = [...data];
 		tasks.reverse();
-		return { user, tasks };
+
+		return { user: session.user, tasks };
 	}
 	return undefined;
 };

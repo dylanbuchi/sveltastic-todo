@@ -2,12 +2,12 @@ import { fail, redirect } from '@sveltejs/kit';
 import { auth } from '@/server/lucia';
 import type { PageServerLoad, Actions } from './$types';
 import { z } from 'zod';
-import { LuciaError } from 'lucia-auth';
+import { LuciaError } from 'lucia';
 import { registerSchema, type RegisterFormData } from '@/utils/validators/auth.validators';
 import { prismaClient } from '@/services/prisma';
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const { session } = await locals.auth.validateUser();
+	const session = await locals.auth.validate();
 	if (session) throw redirect(302, '/');
 	return {};
 };
@@ -40,7 +40,7 @@ export const actions: Actions = {
 			}
 
 			const user = await auth.createUser({
-				primaryKey: {
+				key: {
 					providerId: 'email',
 					providerUserId: email,
 					password
@@ -50,7 +50,7 @@ export const actions: Actions = {
 					name
 				}
 			});
-			const session = await auth.createSession(user.userId);
+			const session = await auth.createSession({ userId: user.userId, attributes: {} });
 			locals.auth.setSession(session);
 		} catch (error) {
 			if (error instanceof z.ZodError) {

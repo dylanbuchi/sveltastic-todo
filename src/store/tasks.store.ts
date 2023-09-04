@@ -11,7 +11,7 @@ import { isDateOlderThanOneDay } from '../utils/helpers/date.helpers';
 import type { TaskCompletedOrActive, TaskFilterOption, TaskSortOption } from '../types/tasks.types';
 
 import type { Task } from '@prisma/client';
-import { generateRandomString } from 'lucia-auth';
+import { generateRandomString } from 'lucia/utils';
 
 function createTasks() {
 	const { subscribe, set, update } = writable<Task[]>([]);
@@ -111,6 +111,8 @@ function createTasks() {
 				});
 
 				if (!response.ok) {
+					console.log(response);
+
 					throw new Error(`${response.status} - ${response.statusText}`);
 				}
 			} catch (error) {

@@ -9,7 +9,7 @@ export async function DELETE({ locals, request }) {
 	let whereCondition;
 
 	if (request.url.includes('completed')) {
-		whereCondition = { userId: session.userId, completed: true };
+		whereCondition = { userId: session.user.userId, completed: true };
 	} else if (request.url.includes('expired')) {
 		const currentDate = new Date();
 
@@ -19,7 +19,7 @@ export async function DELETE({ locals, request }) {
 			}
 		};
 	} else {
-		whereCondition = { userId: session.userId };
+		whereCondition = { userId: session.user.userId };
 	}
 
 	await prismaClient.task.deleteMany({ where: whereCondition });
@@ -35,7 +35,7 @@ export async function POST({ locals, request }) {
 	if (!title || !dueDate) return new Response(null, { status: 400 });
 
 	const task = await prismaClient.task.create({
-		data: { completed: false, userId: session.userId, title, dueDate }
+		data: { completed: false, userId: session.user.userId, title, dueDate }
 	});
 
 	return new Response(JSON.stringify(task), { status: 201 });
@@ -53,7 +53,7 @@ export async function GET({ locals, request }) {
 
 	try {
 		const data = await prismaClient.task.findMany({
-			where: { userId: session.userId },
+			where: { userId: session.user.userId },
 			orderBy: {
 				[column]: sort
 			}

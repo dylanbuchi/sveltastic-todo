@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { APP_NAME } from '@/utils/constants/app.constants';
-	import type { User } from 'lucia-auth';
+	import type { User } from 'lucia';
 	import { isDarkMode } from '@/store/theme.store';
 	import Spinner from './Spinner.svelte';
 	import 'iconify-icon';
