@@ -111,8 +111,6 @@ function createTasks() {
 				});
 
 				if (!response.ok) {
-					console.log(response);
-
 					throw new Error(`${response.status} - ${response.statusText}`);
 				}
 			} catch (error) {

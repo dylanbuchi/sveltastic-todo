@@ -2,7 +2,6 @@ import { prismaClient } from '@/services/prisma';
 
 export async function PATCH({ locals, request, params }) {
 	const session = await locals.auth.validate();
-	console.log(session);
 
 	if (!session) return new Response(null, { status: 401 });
 
